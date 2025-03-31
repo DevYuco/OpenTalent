@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import opentalent.entidades.UsuarioOferta;
 import opentalent.entidades.UsuarioOfertaId;
 import opentalent.repository.UsuarioOfertaRepository;
-import opentalent.repository.UsuarioRepository;
 
 public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 	

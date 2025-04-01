@@ -1,17 +1,29 @@
 package opentalent.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import opentalent.dto.UsuarioDto;
 import opentalent.entidades.Usuario;
 import opentalent.repository.UsuarioRepository;
-
+@Service
 public class UsuarioServiceImpl implements UsuarioService{
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-
+	
+    @Autowired
+    private ModelMapper modelMapper;
+    
 	@Override
 	public List<Usuario> buscarTodos() {
 		
@@ -61,5 +73,39 @@ public class UsuarioServiceImpl implements UsuarioService{
 			return null; 
 		}
 	}
+
+	@Override
+	public UsuarioDto findByUsername(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username);
+        UsuarioDto dto = modelMapper.map(usuario, UsuarioDto.class);
+        
+        if (usuario.getRol() != null) {
+            dto.setRol(usuario.getRol().getNombre());
+        }
+        return dto;
+	}
+
+	@Override
+	public boolean existsByUsername(String username) {
+		
+		return usuarioRepository.existsByUsername(username);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	    Usuario usuario = usuarioRepository.findByUsername(username);
+	    if (usuario == null) {
+	        throw new UsernameNotFoundException("Usuario no encontrado");
+	    }
+	    return usuario; // Ya implementa UserDetails
+	}
+
+	@Override
+	public Usuario buscarPorUsernameEntidad(String username) {
+		// TODO Auto-generated method stub
+		return usuarioRepository.findByUsername(username);
+	}
+
+	
 
 }

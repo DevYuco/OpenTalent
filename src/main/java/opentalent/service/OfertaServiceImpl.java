@@ -3,10 +3,11 @@ package opentalent.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import opentalent.entidades.Oferta;
 import opentalent.repository.OfertaRepository;
-
+@Service
 public class OfertaServiceImpl implements OfertaService {
 	
 	@Autowired

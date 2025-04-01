@@ -3,10 +3,11 @@ package opentalent.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import opentalent.entidades.Rol;
 import opentalent.repository.RolRepository;
-
+@Service
 public class RolServiceImpl implements RolService{
 	
 	@Autowired

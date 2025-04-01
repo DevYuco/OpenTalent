@@ -3,10 +3,11 @@ package opentalent.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import opentalent.entidades.Proyecto;
 import opentalent.repository.ProyectoRepository;
-
+@Service
 public class ProyectoServiceImpl implements ProyectoService{
 	
 	@Autowired

@@ -3,10 +3,11 @@ package opentalent.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import opentalent.entidades.Resenna;
 import opentalent.repository.ResennaRepository;
-
+@Service
 public class ResennaServiceImpl implements ResennaService {
 	
 	@Autowired

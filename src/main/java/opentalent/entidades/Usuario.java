@@ -2,6 +2,13 @@ package opentalent.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -14,7 +21,7 @@ import lombok.*;
 @EqualsAndHashCode(of = "idUsuario")
 @Builder
 @Table(name = "Usuarios")
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,4 +60,35 @@ public class Usuario implements Serializable {
     @ManyToOne
     @JoinColumn(name = "cif")
     private Empresa empresa;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_rol")
+    private Rol rol;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		 return List.of(() -> "ROLE_" + rol.getNombre()); // Spring espera "ROLE_" prefix
+	}
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return activo; // o simplemente `return true;`
+    }
+
 }

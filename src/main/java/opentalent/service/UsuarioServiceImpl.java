@@ -1,14 +1,10 @@
 package opentalent.service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -97,12 +93,12 @@ public class UsuarioServiceImpl implements UsuarioService{
 	    if (usuario == null) {
 	        throw new UsernameNotFoundException("Usuario no encontrado");
 	    }
-	    return usuario; // Ya implementa UserDetails
+	    return usuario; // Funciona por que esta clase Ya implementa UserDetails
 	}
 
 	@Override
 	public Usuario buscarPorUsernameEntidad(String username) {
-		// TODO Auto-generated method stub
+		
 		return usuarioRepository.findByUsername(username);
 	}
 

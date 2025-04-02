@@ -1,6 +1,5 @@
 package opentalent.service;
 
-import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 

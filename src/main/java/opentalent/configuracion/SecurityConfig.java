@@ -13,7 +13,7 @@ import opentalent.jwt.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // 👈 Necesario para @PreAuthorize
+@EnableMethodSecurity // Necesario para @PreAuthorize
 public class SecurityConfig{
 
     @Autowired
@@ -25,9 +25,9 @@ public class SecurityConfig{
             .authorizeHttpRequests(auth -> auth
             		.requestMatchers("/auth/**").permitAll() // login, registro, refresh
             	    .requestMatchers("/public/**").permitAll() // contenido para invitados
-            	    .requestMatchers("/admin/**").hasRole("ADMIN")
-            	    .requestMatchers("/empresa/**").hasRole("EMPRESA")
-            	    .requestMatchers("/usuario/**").hasRole("USER")
+            	    .requestMatchers("/admin/**").hasRole("ADMIN") //Contenido para rol admin
+            	    .requestMatchers("/empresa/**").hasRole("EMPRESA")//Contenido para rol empresa
+            	    .requestMatchers("/usuario/**").hasRole("USER")//Contenido para rol user
             	    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

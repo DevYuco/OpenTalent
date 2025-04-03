@@ -62,4 +62,10 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}
 	}
 
+	@Override
+	public List<Empresa> findByDestacadoYActivo() {
+		
+		return empresaRepository.findByDestacadoYActivo();
+	}
+
 }

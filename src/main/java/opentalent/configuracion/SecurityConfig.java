@@ -27,7 +27,7 @@ public class SecurityConfig{
             	    .requestMatchers("/public/**").permitAll() // contenido para invitados
             	    .requestMatchers("/admin/**").hasRole("ADMIN") //Contenido para rol admin
             	    .requestMatchers("/empresa/**").hasRole("EMPRESA")//Contenido para rol empresa
-            	    .requestMatchers("/usuario/**").hasRole("USER")//Contenido para rol user
+            	    .requestMatchers("/usuario/**").hasRole("USUARIO")//Contenido para rol user
             	    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

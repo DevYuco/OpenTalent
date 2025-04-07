@@ -62,5 +62,11 @@ public class ProyectoServiceImpl implements ProyectoService{
 		}
 	}
 
+	@Override
+	public List<Proyecto> buscarTodosActivos() {
+		
+		return proyectoRepository.buscarTodosActivos();
+	}
+
 
 }

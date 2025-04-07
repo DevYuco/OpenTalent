@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "300cf160-4e33-415d-bced-45d30908233c",
+		"name": "OpenTalent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41583331"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "home",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY1MjY0LCJleHAiOjE3NDM5NjU1NjR9.z7CU3U5R1IxYv_57IHDANlySeE3ygVIxKwpNQo4KKR21sWkP1ezjjMDIgEC13NPhKLMd0QxJ0YBA0G67-Ig9ZQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9009/usuario/home",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9009",
+							"path": [
+								"usuario",
+								"home"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detalle oferta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY1MjY0LCJleHAiOjE3NDM5NjU1NjR9.z7CU3U5R1IxYv_57IHDANlySeE3ygVIxKwpNQo4KKR21sWkP1ezjjMDIgEC13NPhKLMd0QxJ0YBA0G67-Ig9ZQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/detallesoferta/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"detallesoferta",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detalle empresa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJpYXQiOjE3NDM5Njg0MTksImV4cCI6MTc0Mzk2ODcxOX0.T1qvew0Ze88UecO0EG0wxWpKxeBj6QVO5kS3ya_tTc9nxwITgpCW8fNPPlo6v73lJhWIDeA6pOUSscta5SJAkw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/detallesempresa/C11223344",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"detallesempresa",
+								"C11223344"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ofertas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY4NjkxLCJleHAiOjE3NDM5Njg5OTF9.rp4w1Qthezj1BoA-saJ_DZWA17j887XKzl-xGcgfgXcWrUpc6iOGdsGGbytSy11g93GaC81BTc4p4sXbmxF6Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/ofertas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"ofertas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proyectos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/proyectos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"proyectos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"laurag\",\r\n    \"password\": \"1234pass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9009/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9009",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiQURNT04iLCJpYXQiOjE3NDM2MjIyNTksImV4cCI6MTc0NDIyNzA1OX0.nVad3MOrHwqUEs9D1d6qqc8Z1dGTfyml9yFgbsjqJS9VH_JHo4i2s_bCgNQH7R8fSgpxoLE04opPEpCRXUTwvA\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9005/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9005",
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verificar empresa",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXByZXNhIiwicm9sIjoiRU1QUkVTQSIsImlhdCI6MTc0MzYyNDY5OSwiZXhwIjoxNzQzNjI0OTk5fQ.aeYEf38OtDHIeGbvKbhsTOtZ123522vnbM7DbIRfppHNYM0vWNd3O1AJuuX0kjpWciJPwPa5WqF3EYKojk0vbA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9009/empresa/verify",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9009",
+					"path": [
+						"empresa",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:9009",
+			"type": "string"
+		}
+	]
+}

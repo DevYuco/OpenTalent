@@ -62,4 +62,10 @@ public class OfertaServiceImpl implements OfertaService {
 		}
 	}
 
+	@Override
+	public List<Oferta> buscarOfertasActivas() {
+		
+		return ofertaRepository.buscarOfertasActivas();
+	}
+
 }

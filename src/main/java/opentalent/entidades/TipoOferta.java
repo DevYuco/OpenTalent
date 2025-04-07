@@ -1,8 +1,6 @@
 package opentalent.entidades;
 
 public enum TipoOferta {
-	
-	practicas,
-	empleo
-
+    PRACTICAS,
+    EMPLEO
 }

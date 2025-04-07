@@ -1,8 +1,7 @@
 package opentalent.entidades;
 
 public enum EstadoParticipacion {
-	pendiente,
-	aceptado,
-	rechazado
-
+    PENDIENTE,
+    ACEPTADO,
+    RECHAZADO
 }

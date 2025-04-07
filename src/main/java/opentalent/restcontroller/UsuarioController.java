@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import opentalent.dto.EmpresaDto;
 import opentalent.entidades.Empresa;
 import opentalent.entidades.Oferta;
+import opentalent.entidades.Proyecto;
 import opentalent.service.EmpresaService;
 import opentalent.service.OfertaService;
+import opentalent.service.ProyectoService;
 
 @RestController
 @RequestMapping("/usuario")
@@ -29,6 +31,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private OfertaService ofertaService; 
+	
+	@Autowired
+	private ProyectoService proyectoService; 
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -63,7 +68,14 @@ public class UsuarioController {
 
 	    return ResponseEntity.ok(oferta); // 200 OK con la oferta
 	}
-
 	
-
+	@GetMapping("/ofertas")
+	public ResponseEntity<List<Oferta>> todasOfertas(){
+		return ResponseEntity.ok(ofertaService.buscarOfertasActivas());
+	}
+	
+	@GetMapping("/proyectos")
+	public ResponseEntity<List<Proyecto>> todosProyectos(){
+		return ResponseEntity.ok(proyectoService.buscarTodosActivos()); 
+	}
 }

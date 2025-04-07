@@ -1,9 +1,7 @@
 package opentalent.entidades;
 
 public enum EstadoOferta {
-	
-	activa,
-	cerrada,
-	pendiente
-
+    ACTIVA,
+    CERRADA,
+    PENDIENTE
 }

@@ -10,5 +10,5 @@ import opentalent.entidades.Oferta;
 public interface OfertaRepository extends JpaRepository<Oferta, Integer>{
 	@Query("SELECT o FROM Oferta o WHERE o.estado = 'ACTIVA'")
 	List<Oferta> buscarOfertasActivas();
-
+	
 }

@@ -24,6 +24,14 @@ public class SecurityConfig{
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
             		.requestMatchers("/auth/**").permitAll() // login, registro, refresh
+            		.requestMatchers(
+            			    "/swagger-ui/**",
+            			    "/swagger-ui.html",
+            			    "/v3/api-docs/**",
+            			    "/v3/api-docs",
+            			    "/swagger-resources/**",
+            			    "/webjars/**"
+            			).permitAll() //Para permitir swagger
             	    .requestMatchers("/public/**").permitAll() // contenido para invitados
             	    .requestMatchers("/admin/**").hasRole("ADMIN") //Contenido para rol admin
             	    .requestMatchers("/empresa/**").hasRole("EMPRESA")//Contenido para rol empresa

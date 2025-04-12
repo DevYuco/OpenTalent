@@ -39,6 +39,8 @@ public class UsuarioOferta implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private EstadoAplicacion estado;
-
+    
+    private boolean propietario; 
+    
     private boolean favorito;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import opentalent.entidades.Oferta;
 import opentalent.entidades.UsuarioOferta;
 import opentalent.entidades.UsuarioOfertaId;
 import opentalent.repository.UsuarioOfertaRepository;
@@ -61,6 +62,36 @@ public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 		} catch (Exception e) {
 			return null; 
 		}
+	}
+
+	@Override
+	public int añadirOfertaFavoritos(String username, int idOferta) {
+		
+		return usuarioOfertaRepository.añadirOfertaFavoritos(username, idOferta);
+	}
+
+	@Override
+	public int eliminarOfertaFavoritos(String username, int idOferta) {
+		
+		return usuarioOfertaRepository.quitarOfertaFavoritos(username, idOferta);
+	}
+
+	@Override
+	public Boolean comprobarFavorito(String username, int idOferta) {
+		
+		return usuarioOfertaRepository.comprobarFavorito(username, idOferta);
+	}
+
+	@Override
+	public List<Oferta> buscarOfertasFavsActivasPorUsername(String username) {
+		
+		return usuarioOfertaRepository.buscarOfertasFavsActivasPorUsername(username);
+	}
+
+	@Override
+	public int cambiarEstadoFavorito(boolean estado, String username, int idOferta) {
+		
+		return usuarioOfertaRepository.cambiarEstadoFavorito(estado, username, idOferta);
 	}
 
 }

@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import opentalent.entidades.EstadoAplicacion;
+import opentalent.entidades.Proyecto;
+import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioProyecto;
 import opentalent.entidades.UsuarioProyectoId;
 import opentalent.repository.UsuarioProyectoRepository;
@@ -61,6 +64,60 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
 		} catch (Exception e) {
 			return null; 
 		}
+	}
+
+	@Override
+	public int añadirProyectoFavoritos(String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.añadirProyectoFavoritos(username, idProyecto);
+	}
+
+	@Override
+	public int quitarProyectoFavoritos(String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.quitarProyectoFavoritos(username, idProyecto);
+	}
+
+	@Override
+	public Boolean comprobarFavorito(String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.comprobarFavorito(username, idProyecto);
+	}
+
+	@Override
+	public List<Proyecto> buscarProyectosFavsActivosPorUsername(String username) {
+		
+		return usuarioProyectoRepository.buscarProyectosFavsActivosPorUsername(username);
+	}
+
+	@Override
+	public List<Proyecto> buscarProyectosPropietarioYActivo(String username) {
+		
+		return usuarioProyectoRepository.buscarProyectosPropietarioYActivo(username);
+	}
+
+	@Override
+	public List<Usuario> postulantesPendientes(int idProyecto) {
+		
+		return usuarioProyectoRepository.postulantesPendientes(idProyecto);
+	}
+
+	@Override
+	public int modificarEstadoProyecto(EstadoAplicacion estado, int idUsuario, int idProyecto) {
+		
+		return usuarioProyectoRepository.modificarEstadoProyecto(estado, idUsuario, idProyecto);
+	}
+
+	@Override
+	public boolean esPropietarioDelProyecto(String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.esPropietarioDelProyecto(username, idProyecto);
+	}
+
+	@Override
+	public int rechazarSolicitudesPendientesPorProyecto(int idProyecto) {
+		
+		return usuarioProyectoRepository.rechazarSolicitudesPendientesPorProyecto(idProyecto);
 	}
 
 }

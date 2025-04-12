@@ -68,5 +68,11 @@ public class ProyectoServiceImpl implements ProyectoService{
 		return proyectoRepository.buscarTodosActivos();
 	}
 
+	@Override
+	public Integer cancelarProyecto(int idProyecto) {
+		
+		return proyectoRepository.cancelarProyecto(idProyecto);
+	}
+
 
 }

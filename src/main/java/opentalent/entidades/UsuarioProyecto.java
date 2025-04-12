@@ -31,7 +31,9 @@ public class UsuarioProyecto implements Serializable {
     private Proyecto proyecto;
 
     @Enumerated(EnumType.STRING)
-    private EstadoParticipacion estado;
-
+    private EstadoAplicacion estado;
+    
+    private boolean propietario; 
+    
     private boolean favorito;
 }

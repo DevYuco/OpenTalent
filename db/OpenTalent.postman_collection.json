@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY1MjY0LCJleHAiOjE3NDM5NjU1NjR9.z7CU3U5R1IxYv_57IHDANlySeE3ygVIxKwpNQo4KKR21sWkP1ezjjMDIgEC13NPhKLMd0QxJ0YBA0G67-Ig9ZQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDEzNzQxNSwiZXhwIjoxNzQ0MTM3NzE1fQ.y61wt5fYqPZBRipQizlwWV3aIxNTwt6bREJUqBaDZZAKlTyg7MtOoilYteq8Qyw_fyQLFybaHoHJ97YQj9YJxg",
 									"type": "string"
 								}
 							]
@@ -47,7 +47,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY1MjY0LCJleHAiOjE3NDM5NjU1NjR9.z7CU3U5R1IxYv_57IHDANlySeE3ygVIxKwpNQo4KKR21sWkP1ezjjMDIgEC13NPhKLMd0QxJ0YBA0G67-Ig9ZQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQ0MTM3MDc0LCJleHAiOjE3NDQxMzczNzR9.PvIXywLqICtbEnL4GmNbFVsPAyf4jqjaUzHH-Eed4PMjx8ee98PX2LnhKm2AAW97RccA7MGMALD3fING4NydmQ",
 									"type": "string"
 								}
 							]
@@ -105,7 +105,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY4NjkxLCJleHAiOjE3NDM5Njg5OTF9.rp4w1Qthezj1BoA-saJ_DZWA17j887XKzl-xGcgfgXcWrUpc6iOGdsGGbytSy11g93GaC81BTc4p4sXbmxF6Mg",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY5NjQ5LCJleHAiOjE3NDM5Njk5NDl9.OTUXn0CobW-Uam5lAoJHfiL2TbiMZZo2l0DkE0mTPv3QaFbaehF-KdOQ4gtTu2qt185wwksHJqN9zPkfigyXqw",
 									"type": "string"
 								}
 							]
@@ -128,6 +128,16 @@
 				{
 					"name": "proyectos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ3MzY0NiwiZXhwIjoxNzQ0NDczOTQ2fQ.VbjWO4BTLJ7xzerMy3BHYrqOpf8WO6JUsrMSGVv6YV0Uk1nDyDJw3-3PaJhoCYctLdqMe_QvY2owy9u7erjpBg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -138,6 +148,388 @@
 							"path": [
 								"usuario",
 								"proyectos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detallesproyecto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDM4ODQ0MywiZXhwIjoxNzQ0Mzg4NzQzfQ.6ZzmCxq8p_w8NHVOh6kDuxI50irqnXFvHlBcqz1kx87mlK-FaF15d2DthLqowaexnVAOA27_5V6hbEchGTk8DA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/detallesproyecto/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"detallesproyecto",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "oferta favoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1MjU0MiwiZXhwIjoxNzQ0NDUyODQyfQ.oSQD9GNRnQicLCRHivzRpn8UBV39hyJ_KbDGmH87A5g40c6F2bWOYclgNV-YFrJzVIPnHa39DjuIJ42EhS853A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/añadirofertafav/usuario/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"añadirofertafav",
+								"usuario",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proyecto favoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1MTg1NCwiZXhwIjoxNzQ0NDUyMTU0fQ.v_S6uhB7yh2naS4_CFlVhvdeXl44-2HTREQ5qriid9Zvryu214OR55H0anz5T1JvLgHbK_O9GDVGWCymGcmb1w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/añadirproyectofav/usuario/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"añadirproyectofav",
+								"usuario",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "añadir resenna",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ3MDMyNSwiZXhwIjoxNzQ0NDcwNjI1fQ.hEn8AMEolvWKSSrcA20C8bQtKFpY4WZiBpLNckteZk8h4xmknuNaaRqDfuGD0kh5v3V2_p8Wa5Ggji3od8WJOQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Muy mala experiencia\",\r\n  \"comentario\": \"El proceso de selección fue un timo.\",\r\n  \"puntuacion\": 5,\r\n  \"username\": \"usuario\",\r\n  \"cif\": \"A12345678\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuario/addresenna",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"addresenna"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proyectos favoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1MTg1NCwiZXhwIjoxNzQ0NDUyMTU0fQ.v_S6uhB7yh2naS4_CFlVhvdeXl44-2HTREQ5qriid9Zvryu214OR55H0anz5T1JvLgHbK_O9GDVGWCymGcmb1w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/proyectosfavs/usuario",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"proyectosfavs",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ofertas favoritas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1MjU0MiwiZXhwIjoxNzQ0NDUyODQyfQ.oSQD9GNRnQicLCRHivzRpn8UBV39hyJ_KbDGmH87A5g40c6F2bWOYclgNV-YFrJzVIPnHa39DjuIJ42EhS853A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/ofertasfavs/usuario",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"ofertasfavs",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cambiar estado favoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1MzYzMiwiZXhwIjoxNzQ0NDUzOTMyfQ._zcgHO4S3SOZns80S9ZzmdaP-eM6QTifb9D48_auNAGtGBFhaJibfQWqKWnmf3jPGE6m7zK0roGZGTguwb2hsg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado\": false,\r\n    \"username\": \"usuario\", \r\n    \"idOferta\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuario/cambiarestadofavorito",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"cambiarestadofavorito"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mis proyectos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1NDQ0MCwiZXhwIjoxNzQ0NDU0NzQwfQ.zbFE7XeTl9wVMMZ8FsAeEPueomJvrjjN8gohu3DK23JaMNUQvkgPAlbNH4gQzIyF-MSYj21qGqDrtaAuVIkGtg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/misproyectos/usuario",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"misproyectos",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editar proyecto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ1NTk3MCwiZXhwIjoxNzQ0NDU2MjcwfQ.Ave1qX1fE29UBX1qS4_m7NytcxQIwIt24-YA59UwdahnVhQBE-y31jgqQzRs_uchJzNNcDm0wlCj-qKccyioHA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idProyecto\": 1,\r\n  \"nombre\": \"Proyecto de Inteligencia Artificial\",\r\n  \"descripcion\": \"Desarrollo de una solución de IA para análisis de datos.\",\r\n  \"fechaInicio\": \"2024-05-01\",\r\n  \"fechaFin\": \"2025-09-30\",\r\n  \"foto\": \"https://images.unsplash.com/photo-1605902711622-cfb43c4437d4\",\r\n  \"fotoContenido\": \"https://images.unsplash.com/photo-1605902711622-cfb43c4437d4\",\r\n  \"plazas\": 7\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuario/editarproyecto",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"editarproyecto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postulantes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ3MjY5OCwiZXhwIjoxNzQ0NDcyOTk4fQ.RQCLvP-CIOECMBgjb-4Gh5P3CYBzFQrNt-fJXIttqYP3P5Uf7LdhMApbJDw75zUzln2BvN839o-D9lytdxKctA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/postulantes/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"postulantes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "responder solicitud",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQ0NDc0NDY4LCJleHAiOjE3NDQ0NzQ3Njh9.SUjJAgRJGBr1S_y4QmOBSXHLYxt0WOq4SKkJpkd3_Qk_vWzHUEvErDdEF98z3ecQJka_G4xUlpfAk-l8b0DJeQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"estado\": \"RECHAZADO\",\r\n  \"idUsuario\": 2,\r\n  \"idProyecto\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuario/respondersolicitud",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"respondersolicitud"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancelar proyecto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ3MzY0NiwiZXhwIjoxNzQ0NDczOTQ2fQ.VbjWO4BTLJ7xzerMy3BHYrqOpf8WO6JUsrMSGVv6YV0Uk1nDyDJw3-3PaJhoCYctLdqMe_QvY2owy9u7erjpBg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuario/cancelarproyecto/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuario",
+								"cancelarproyecto",
+								"2"
 							]
 						}
 					},

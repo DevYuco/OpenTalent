@@ -68,4 +68,10 @@ public class OfertaServiceImpl implements OfertaService {
 		return ofertaRepository.buscarOfertasActivas();
 	}
 
+	@Override
+	public List<Oferta> findActivasByEmpresaCif(String cif) {
+		
+		return ofertaRepository.findActivasByEmpresaCif(cif);
+	}
+
 }

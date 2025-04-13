@@ -94,4 +94,28 @@ public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 		return usuarioOfertaRepository.cambiarEstadoFavorito(estado, username, idOferta);
 	}
 
+	@Override
+	public UsuarioOferta findByUsernameAndIdOferta(String username, int idOferta) {
+		
+		return usuarioOfertaRepository.findByUsernameAndIdOferta(username, idOferta);
+	}
+
+	@Override
+	public int contarAceptadosPorOferta(int idOferta) {
+		
+		return usuarioOfertaRepository.contarAceptadosPorOferta(idOferta);
+	}
+
+	@Override
+	public int contarInscritosPorEmpresa(String cif) {
+		
+		return usuarioOfertaRepository.contarInscritosPorEmpresa(cif);
+	}
+
+	@Override
+	public boolean esFavorita(String username, int idOferta) {
+		
+		return usuarioOfertaRepository.esFavorita(username, idOferta);
+	}
+
 }

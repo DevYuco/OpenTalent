@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SectorNombreDto {
-	private String nombre;
+public class OfertaDetallesEmpresaDto {
+    private String nombre;
+    private String descripcion;
+    private String foto;
 }

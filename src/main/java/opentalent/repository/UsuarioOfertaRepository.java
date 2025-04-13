@@ -32,5 +32,17 @@ public interface UsuarioOfertaRepository extends JpaRepository<UsuarioOferta, Us
 	
 	@Query("SELECT uo.oferta FROM UsuarioOferta uo WHERE (uo.oferta.estado = 'ACTIVA' OR uo.oferta.estado = 'PENDIENTE') AND uo.favorito = true AND uo.usuario.username = ?1")
 	List<Oferta> buscarOfertasFavsActivasPorUsername(String username);
-
+	
+	@Query("SELECT uo FROM UsuarioOferta uo WHERE uo.usuario.username = ?1  AND uo.oferta.idOferta = ?2")
+	UsuarioOferta findByUsernameAndIdOferta(String username, int idOferta);
+	
+	@Query("SELECT COUNT(uo) FROM UsuarioOferta uo WHERE uo.oferta.idOferta = ?1 and uo.estado = 'ACEPTADO'")
+	int contarAceptadosPorOferta(int idOferta);
+	
+	@Query("SELECT COUNT(uo) FROM UsuarioOferta uo WHERE uo.estado = 'ACEPTADO' AND uo.oferta.empresa.cif = ?1") 
+	int contarInscritosPorEmpresa(String cif);
+	
+	@Query("SELECT COUNT(uo) > 0 FROM UsuarioOferta uo WHERE uo.usuario.username = ?1 AND uo.favorito = true")
+	boolean esFavorita(String username, int idOferta);
+	
 }

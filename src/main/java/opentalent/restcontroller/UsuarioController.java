@@ -21,14 +21,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import opentalent.dto.CambiarFavoritoDto;
 import opentalent.dto.EmpresaDto;
 import opentalent.dto.EstadoCandidatoDto;
+import opentalent.dto.OfertaDetallesEmpresaDto;
+import opentalent.dto.OfertaDetallesVistaDto;
+import opentalent.dto.OfertaTodasDto;
+import opentalent.dto.ResennaDetallesEmpresaDto;
 import opentalent.dto.ResennaDto;
 import opentalent.dto.UsuarioDto;
+import opentalent.dto.UsuarioResennaDetallesEmpresaDto;
+import opentalent.entidades.Direccion;
 import opentalent.entidades.Empresa;
 import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Oferta;
 import opentalent.entidades.Proyecto;
 import opentalent.entidades.Resenna;
 import opentalent.entidades.Usuario;
+import opentalent.entidades.UsuarioOferta;
 import opentalent.entidades.Valoracion;
 import opentalent.service.EmpresaService;
 import opentalent.service.OfertaService;
@@ -67,7 +74,8 @@ public class UsuarioController {
     @Autowired
     private ResennaService resennaService;
 
-    @Operation(summary = "Empresas destacadas", description = "Devuelve una lista de empresas activas con el flag 'destacado' activado")
+    @Operation(
+    		summary = "Empresas destacadas", description = "Devuelve una lista de empresas activas con el flag 'destacado' activado")
     @ApiResponse(responseCode = "200", description = "Listado de empresas exitoso")
     @GetMapping("/home")
     public ResponseEntity<List<Empresa>> home() {
@@ -81,26 +89,105 @@ public class UsuarioController {
         
         if (empresa == null) return ResponseEntity.notFound().build();
         
+        // Mapear los datos básicos de la empresa
         EmpresaDto empresaDto = modelMapper.map(empresa, EmpresaDto.class);
+        // Obtener ofertas activas asociadas a la empresa
+        List<Oferta> ofertas = ofertaService.findActivasByEmpresaCif(cif);
+        // Obtener reseñas de la empresa
+        List<Resenna> resennas = resennaService.findByEmpresaCif(cif);
+        //Calcular inscritos a las ofertas de una empresa
+        int inscritos = usuarioOfertaService.contarInscritosPorEmpresa(cif);
+        // Mapear solo los campos necesarios de cada oferta
+        List<OfertaDetallesEmpresaDto> ofertasDto = ofertas.stream()
+            .map(o -> new OfertaDetallesEmpresaDto(o.getTitulo(), o.getDescripcion(), o.getFotoContenido()))
+            .toList();
+        // Mapear dtos necesarios de las resennas
+        List<ResennaDetallesEmpresaDto> resennasDto = resennas.stream()
+        	    .map(r -> new ResennaDetallesEmpresaDto(
+        	        r.getTitulo(),
+        	        r.getComentario(),
+        	        r.getPuntuacion(),
+        	        r.getValoracion(),
+        	        new UsuarioResennaDetallesEmpresaDto(
+        	            r.getUsuario().getNombre(),
+        	            r.getUsuario().getApellidos(),
+        	            r.getUsuario().getFotoPerfil()
+        	        )
+        	    ))
+        	    .toList();
+        //insertar ofertas y resennas
+        empresaDto.setOfertas(ofertasDto);
+        empresaDto.setResennas(resennasDto);
+        empresaDto.setNumeroInscritos(inscritos);
         
         return ResponseEntity.ok(empresaDto);
     }
 
     @Operation(summary = "Detalles de oferta", description = "Devuelve los datos de una oferta específica")
     @GetMapping("/detallesoferta/{id}")
-    public ResponseEntity<Oferta> detallesOferta(@PathVariable Integer id) {
-        Oferta oferta = ofertaService.buscarUno(id);
+    public ResponseEntity<OfertaDetallesVistaDto> detallesOferta(@PathVariable Integer id) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();   
+    	
+    	Oferta oferta = ofertaService.buscarUno(id);
+    	
+    	//Verificar oferta
+    	if (oferta == null) return ResponseEntity.notFound().build();
+    	
+    	Empresa empresa = oferta.getEmpresa();
+
+        // Obtener info de la tabla intermedia UsuarioOferta
+        UsuarioOferta usuarioOferta = usuarioOfertaService.findByUsernameAndIdOferta(username, id);
+        //Calcular vacantes
+        int aceptados = usuarioOfertaService.contarAceptadosPorOferta(id);
+        int vacantesDisponibles = oferta.getNumeroPlazas() - aceptados;
         
-        if (oferta == null) return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(oferta);
+        OfertaDetallesVistaDto dto = new OfertaDetallesVistaDto();
+        //Detalles de oferta
+        dto.setTitulo(oferta.getTitulo());
+        dto.setDescripcion(oferta.getDescripcion());
+        dto.setModalidad(oferta.getModalidad() != null ? oferta.getModalidad().name() : null);
+        dto.setImagenOferta(oferta.getFotoContenido());
+        //detalles de empresa
+        dto.setNombreEmpresa(empresa.getNombreEmpresa());
+        dto.setFotoEmpresa(empresa.getFoto());
+        dto.setDireccionEmpresa(empresa.getDireccion());
+        //Detalles de usuario_oferta, activo y estado
+        dto.setEstadoAplicacion(usuarioOferta != null ? usuarioOferta.getEstado().name() : "NO_APLICADO");
+        dto.setEsFavorita(usuarioOferta != null && usuarioOferta.isFavorito());
+        dto.setVacantesDisponibles(Math.max(vacantesDisponibles, 0)); 
+
+        return ResponseEntity.ok(dto);
     }
 
-    @Operation(summary = "Listar ofertas activas", description = "Devuelve todas las ofertas disponibles y activas")
+    @Operation(summary = "Listar ofertas activas", description = "Devuelve todas las ofertas activas con info resumida y favoritas del usuario")
     @GetMapping("/ofertas")
-    public ResponseEntity<List<Oferta>> todasOfertas() {
-        return ResponseEntity.ok(ofertaService.buscarOfertasActivas());
+    public ResponseEntity<List<OfertaTodasDto>> todasOfertas() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<Oferta> ofertas = ofertaService.buscarOfertasActivas();
+
+        List<OfertaTodasDto> dtoList = ofertas.stream()
+            .map(oferta -> {
+                OfertaTodasDto dto = new OfertaTodasDto();
+                dto.setFotoContenido(oferta.getFotoContenido());
+                dto.setTitulo(oferta.getTitulo());
+                dto.setDescripcion(oferta.getDescripcion());
+                
+                if (oferta.getEmpresa() != null) {
+                    dto.setFoto(oferta.getEmpresa().getFoto());
+                    dto.setDireccion( oferta.getEmpresa().getDireccion());
+                }
+
+                boolean favorita = usuarioOfertaService.esFavorita(username, oferta.getIdOferta());
+                dto.setEsFavorita(favorita); 
+
+                return dto;
+            })
+            .toList();
+
+        return ResponseEntity.ok(dtoList);
     }
+
 
     @Operation(summary = "Listar proyectos activos", description = "Devuelve todos los proyectos disponibles y activos")
     @GetMapping("/proyectos")

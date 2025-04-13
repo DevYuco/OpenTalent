@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDEzNzQxNSwiZXhwIjoxNzQ0MTM3NzE1fQ.y61wt5fYqPZBRipQizlwWV3aIxNTwt6bREJUqBaDZZAKlTyg7MtOoilYteq8Qyw_fyQLFybaHoHJ97YQj9YJxg",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWNpYWdwIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDUzNjE0MCwiZXhwIjoxNzQ0NTM2NDQwfQ.0NiTAr1ICDo1oxzUfBB15aRvngqi8rImmc2SUXBN-gn4Hy9DTVKWTqljwRdBPWOdVDfugzXT21b3a_kXaN1WCg",
 									"type": "string"
 								}
 							]
@@ -47,7 +47,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQ0MTM3MDc0LCJleHAiOjE3NDQxMzczNzR9.PvIXywLqICtbEnL4GmNbFVsPAyf4jqjaUzHH-Eed4PMjx8ee98PX2LnhKm2AAW97RccA7MGMALD3fING4NydmQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWNpYWdwIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDU0MTA5OCwiZXhwIjoxNzQ0NTQxMzk4fQ.K6IVsrSsdszpRneYjxypyf8bMk7IoacO7j5Cr6dgwl8ViutDYEbKVpmMDcGgV1sFuuCVUK_oG_uvfTIO4LacaQ",
 									"type": "string"
 								}
 							]
@@ -76,7 +76,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJpYXQiOjE3NDM5Njg0MTksImV4cCI6MTc0Mzk2ODcxOX0.T1qvew0Ze88UecO0EG0wxWpKxeBj6QVO5kS3ya_tTc9nxwITgpCW8fNPPlo6v73lJhWIDeA6pOUSscta5SJAkw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWNpYWdwIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDU0MTQ4NywiZXhwIjoxNzQ0NTQxNzg3fQ.N12FSXpSisrWN9idWbWHgKF1YJcExNzTglouYVTCX1B_it4oTk5uwdfwS5hGD5sMN3617v3t0s-kw7qT3trKXw",
 									"type": "string"
 								}
 							]
@@ -84,14 +84,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/usuario/detallesempresa/C11223344",
+							"raw": "{{url}}/usuario/detallesempresa/A12345678",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"usuario",
 								"detallesempresa",
-								"C11223344"
+								"A12345678"
 							]
 						}
 					},
@@ -105,7 +105,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYXVyYWciLCJyb2wiOiJVU1VBUklPIiwiaWF0IjoxNzQzOTY5NjQ5LCJleHAiOjE3NDM5Njk5NDl9.OTUXn0CobW-Uam5lAoJHfiL2TbiMZZo2l0DkE0mTPv3QaFbaehF-KdOQ4gtTu2qt185wwksHJqN9zPkfigyXqw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWNpYWdwIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDU0MjU3MCwiZXhwIjoxNzQ0NTQyODcwfQ.fGd3YLqjEtSjbQCELVv1SV5VshIqq1D-Ho-f_-08gMzXI6pxYL522e2_IvuBQ1b4Xb0kKXifWelsqlvxRKKQSQ",
 									"type": "string"
 								}
 							]
@@ -250,7 +250,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c3VhcmlvIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDQ3MDMyNSwiZXhwIjoxNzQ0NDcwNjI1fQ.hEn8AMEolvWKSSrcA20C8bQtKFpY4WZiBpLNckteZk8h4xmknuNaaRqDfuGD0kh5v3V2_p8Wa5Ggji3od8WJOQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsdWNpYWdwIiwicm9sIjoiVVNVQVJJTyIsImlhdCI6MTc0NDUzNzUwNCwiZXhwIjoxNzQ0NTM3ODA0fQ.HDZai0zy5LlmKXifMoVAdQzvLsUUc8EYdZQT-7BdsmE4eKtXt-DRop05smtReRmLtiPl-lUgntf1o1U80NziqA",
 									"type": "string"
 								}
 							]
@@ -259,7 +259,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"titulo\": \"Muy mala experiencia\",\r\n  \"comentario\": \"El proceso de selección fue un timo.\",\r\n  \"puntuacion\": 5,\r\n  \"username\": \"usuario\",\r\n  \"cif\": \"A12345678\"\r\n}\r\n",
+							"raw": "{\r\n  \"titulo\": \"Muy mala experiencia\",\r\n  \"comentario\": \"El proceso de selección fue un timo.\",\r\n  \"puntuacion\": 2,\r\n  \"username\": \"luciagp\",\r\n  \"cif\": \"C11223344\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -538,74 +538,117 @@
 			]
 		},
 		{
-			"name": "Login",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"laurag\",\r\n    \"password\": \"1234pass\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"luciagp\",\r\n    \"password\": \"Contrasena\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9009/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9009",
+							"path": [
+								"auth",
+								"login"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:9009/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9009",
-					"path": [
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Refresh",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiQURNT04iLCJpYXQiOjE3NDM2MjIyNTksImV4cCI6MTc0NDIyNzA1OX0.nVad3MOrHwqUEs9D1d6qqc8Z1dGTfyml9yFgbsjqJS9VH_JHo4i2s_bCgNQH7R8fSgpxoLE04opPEpCRXUTwvA\" \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "signup",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Lucía\",\r\n  \"apellidos\": \"González Pérez\",\r\n  \"email\": \"lucia.gonzalez@example.com\",\r\n  \"estudios\": \"Grado en Ingeniería Informática\",\r\n  \"experiencia\": \"2 años como desarrolladora backend\",\r\n  \"cv\": \"lucia_cv.pdf\",\r\n  \"fotoPerfil\": \"https://i.pravatar.cc/150?img=47\",\r\n  \"telefono\": \"612345678\",\r\n  \"username\": \"luciagp\",\r\n  \"password\": \"Contrasena\",\r\n  \"fechaNacimiento\": \"1996-03-15\",\r\n  \"calle\": \"Calle Falsa 123\",\r\n  \"pais\": \"España\",\r\n  \"codigoPostal\": \"28080\",\r\n  \"provincia\": \"Madrid\",\r\n  \"poblacion\": \"Madrid\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9009/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9009",
+							"path": [
+								"auth",
+								"signup"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:9005/auth/refresh",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9005",
-					"path": [
-						"auth",
-						"refresh"
-					]
+				{
+					"name": "Refresh",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBjb3JyZW8uY29tIiwicm9sIjoiQURNT04iLCJpYXQiOjE3NDM2MjIyNTksImV4cCI6MTc0NDIyNzA1OX0.nVad3MOrHwqUEs9D1d6qqc8Z1dGTfyml9yFgbsjqJS9VH_JHo4i2s_bCgNQH7R8fSgpxoLE04opPEpCRXUTwvA\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9005/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9005",
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
 			"name": "verificar empresa",

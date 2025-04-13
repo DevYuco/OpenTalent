@@ -7,4 +7,5 @@ import opentalent.repository.IGenericoCRUD;
 
 public interface OfertaService extends IGenericoCRUD<Oferta, Integer>{
 	List<Oferta> buscarOfertasActivas();
+	List<Oferta> findActivasByEmpresaCif(String cif);
 }

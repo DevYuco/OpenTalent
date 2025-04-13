@@ -62,4 +62,10 @@ public class ResennaServiceImpl implements ResennaService {
 		}
 	}
 
+	@Override
+	public List<Resenna> findByEmpresaCif(String cif) {
+		
+		return resennaRepository.findByEmpresaCif(cif);
+	}
+
 }

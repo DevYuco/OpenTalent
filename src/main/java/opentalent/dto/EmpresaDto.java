@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import opentalent.entidades.Direccion;
+import opentalent.entidades.Sector;
 
 @Data
 @AllArgsConstructor
@@ -19,5 +20,9 @@ public class EmpresaDto {
     private String fotoContenido;
     private boolean destacado;
     private Direccion direccion; 
-    private List<SectorNombreDto> sectores; 
+    private List<Sector> sectores; 
+    private int numeroInscritos;
+
+    private List<OfertaDetallesEmpresaDto> ofertas;
+    private List<ResennaDetallesEmpresaDto> resennas;
 }

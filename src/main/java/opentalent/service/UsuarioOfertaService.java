@@ -13,4 +13,8 @@ public interface UsuarioOfertaService extends IGenericoCRUD<UsuarioOferta, Usuar
 	Boolean comprobarFavorito(String username, int idOferta);
 	int cambiarEstadoFavorito(boolean estado, String username, int idOferta); 
 	List<Oferta> buscarOfertasFavsActivasPorUsername(String username); 
+	UsuarioOferta findByUsernameAndIdOferta(String username, int idOferta);
+	int contarAceptadosPorOferta(int idOferta);
+	int contarInscritosPorEmpresa(String cif);
+	boolean esFavorita(String username, int idOferta);
 }

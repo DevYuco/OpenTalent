@@ -20,15 +20,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import opentalent.dto.CambiarFavoritoDto;
 import opentalent.dto.EmpresaDto;
+import opentalent.dto.EmpresaHomeUsuarioDto;
 import opentalent.dto.EstadoCandidatoDto;
 import opentalent.dto.OfertaDetallesEmpresaDto;
 import opentalent.dto.OfertaDetallesVistaDto;
 import opentalent.dto.OfertaTodasDto;
+import opentalent.dto.ProyectoDetallesVistaDto;
+import opentalent.dto.ProyectosVistaDto;
 import opentalent.dto.ResennaDetallesEmpresaDto;
 import opentalent.dto.ResennaDto;
 import opentalent.dto.UsuarioDto;
-import opentalent.dto.UsuarioResennaDetallesEmpresaDto;
-import opentalent.entidades.Direccion;
+import opentalent.dto.UsuarioVistaDetalleProyectoDto;
 import opentalent.entidades.Empresa;
 import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Oferta;
@@ -36,6 +38,7 @@ import opentalent.entidades.Proyecto;
 import opentalent.entidades.Resenna;
 import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioOferta;
+import opentalent.entidades.UsuarioProyecto;
 import opentalent.entidades.Valoracion;
 import opentalent.service.EmpresaService;
 import opentalent.service.OfertaService;
@@ -78,8 +81,14 @@ public class UsuarioController {
     		summary = "Empresas destacadas", description = "Devuelve una lista de empresas activas con el flag 'destacado' activado")
     @ApiResponse(responseCode = "200", description = "Listado de empresas exitoso")
     @GetMapping("/home")
-    public ResponseEntity<List<Empresa>> home() {
-        return ResponseEntity.ok(empresaService.findByDestacadoYActivo());
+    public ResponseEntity<List<EmpresaHomeUsuarioDto>> home() {
+    	List<Empresa> empresas = empresaService.findByDestacadoYActivo(); 
+    	
+    	List<EmpresaHomeUsuarioDto> empresasDto = empresas.stream()
+    		    .map(emp -> modelMapper.map(emp, EmpresaHomeUsuarioDto.class))
+    		    .toList();
+
+        return ResponseEntity.ok(empresasDto);
     }
 
     @Operation(summary = "Detalles de empresa", description = "Obtiene los datos de una empresa a partir de su CIF")
@@ -99,21 +108,11 @@ public class UsuarioController {
         int inscritos = usuarioOfertaService.contarInscritosPorEmpresa(cif);
         // Mapear solo los campos necesarios de cada oferta
         List<OfertaDetallesEmpresaDto> ofertasDto = ofertas.stream()
-            .map(o -> new OfertaDetallesEmpresaDto(o.getTitulo(), o.getDescripcion(), o.getFotoContenido()))
+            .map(o -> modelMapper.map(o, OfertaDetallesEmpresaDto.class))
             .toList();
         // Mapear dtos necesarios de las resennas
         List<ResennaDetallesEmpresaDto> resennasDto = resennas.stream()
-        	    .map(r -> new ResennaDetallesEmpresaDto(
-        	        r.getTitulo(),
-        	        r.getComentario(),
-        	        r.getPuntuacion(),
-        	        r.getValoracion(),
-        	        new UsuarioResennaDetallesEmpresaDto(
-        	            r.getUsuario().getNombre(),
-        	            r.getUsuario().getApellidos(),
-        	            r.getUsuario().getFotoPerfil()
-        	        )
-        	    ))
+        	    .map(r -> modelMapper.map(r,ResennaDetallesEmpresaDto.class))
         	    .toList();
         //insertar ofertas y resennas
         empresaDto.setOfertas(ofertasDto);
@@ -141,20 +140,20 @@ public class UsuarioController {
         int aceptados = usuarioOfertaService.contarAceptadosPorOferta(id);
         int vacantesDisponibles = oferta.getNumeroPlazas() - aceptados;
         
-        OfertaDetallesVistaDto dto = new OfertaDetallesVistaDto();
-        //Detalles de oferta
-        dto.setTitulo(oferta.getTitulo());
-        dto.setDescripcion(oferta.getDescripcion());
-        dto.setModalidad(oferta.getModalidad() != null ? oferta.getModalidad().name() : null);
-        dto.setImagenOferta(oferta.getFotoContenido());
-        //detalles de empresa
-        dto.setNombreEmpresa(empresa.getNombreEmpresa());
-        dto.setFotoEmpresa(empresa.getFoto());
-        dto.setDireccionEmpresa(empresa.getDireccion());
-        //Detalles de usuario_oferta, activo y estado
-        dto.setEstadoAplicacion(usuarioOferta != null ? usuarioOferta.getEstado().name() : "NO_APLICADO");
-        dto.setEsFavorita(usuarioOferta != null && usuarioOferta.isFavorito());
-        dto.setVacantesDisponibles(Math.max(vacantesDisponibles, 0)); 
+
+        OfertaDetallesVistaDto dto = OfertaDetallesVistaDto.builder()
+            .idOferta(oferta.getIdOferta())
+            .titulo(oferta.getTitulo())
+            .descripcion(oferta.getDescripcion())
+            .modalidad(oferta.getModalidad() != null ? oferta.getModalidad().name() : null)
+            .imagenOferta(oferta.getFotoContenido())
+            .nombreEmpresa(empresa.getNombreEmpresa())
+            .fotoEmpresa(empresa.getFoto())
+            .direccionEmpresa(empresa.getDireccion())
+            .estadoAplicacion(usuarioOferta != null ? usuarioOferta.getEstado().name() : "NO_APLICADO")
+            .esFavorita(usuarioOferta != null && usuarioOferta.isFavorito())
+            .vacantesDisponibles(vacantesDisponibles)
+            .build();
 
         return ResponseEntity.ok(dto);
     }
@@ -167,23 +166,20 @@ public class UsuarioController {
         List<Oferta> ofertas = ofertaService.buscarOfertasActivas();
 
         List<OfertaTodasDto> dtoList = ofertas.stream()
-            .map(oferta -> {
-                OfertaTodasDto dto = new OfertaTodasDto();
-                dto.setFotoContenido(oferta.getFotoContenido());
-                dto.setTitulo(oferta.getTitulo());
-                dto.setDescripcion(oferta.getDescripcion());
-                
-                if (oferta.getEmpresa() != null) {
-                    dto.setFoto(oferta.getEmpresa().getFoto());
-                    dto.setDireccion( oferta.getEmpresa().getDireccion());
-                }
+        	    .map(oferta -> {
+        	        boolean favorita = usuarioOfertaService.esFavorita(username, oferta.getIdOferta());
 
-                boolean favorita = usuarioOfertaService.esFavorita(username, oferta.getIdOferta());
-                dto.setEsFavorita(favorita); 
-
-                return dto;
-            })
-            .toList();
+        	        return OfertaTodasDto.builder()
+        	            .idOfeta(oferta.getIdOferta())
+        	            .fotoContenido(oferta.getFotoContenido())
+        	            .titulo(oferta.getTitulo())
+        	            .descripcion(oferta.getDescripcion())
+        	            .foto(oferta.getEmpresa() != null ? oferta.getEmpresa().getFoto() : null)
+        	            .direccion(oferta.getEmpresa() != null ? oferta.getEmpresa().getDireccion() : null)
+        	            .esFavorita(favorita)
+        	            .build();
+        	    })
+        	    .toList();
 
         return ResponseEntity.ok(dtoList);
     }
@@ -191,14 +187,59 @@ public class UsuarioController {
 
     @Operation(summary = "Listar proyectos activos", description = "Devuelve todos los proyectos disponibles y activos")
     @GetMapping("/proyectos")
-    public ResponseEntity<List<Proyecto>> todosProyectos() {
-        return ResponseEntity.ok(proyectoService.buscarTodosActivos());
+    public ResponseEntity<List<ProyectosVistaDto>> todosProyectos() {
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	
+    	List<Proyecto> proyectos = proyectoService.buscarTodosActivos(); 
+    	
+    	List<ProyectosVistaDto> proyectosDto = proyectos.stream()
+    			.map(p -> {
+    				ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class); 
+    				boolean favorito = usuarioProyectoService.esFavorita(username, p.getIdProyecto()); 
+    				dto.setEsFavorito(favorito);
+    				int aceptados = usuarioProyectoService.contarInscritosPorProyecto(p.getIdProyecto()); 
+    				int plazas = p.getPlazas() - aceptados; 
+    				dto.setPlazasDisponibles(plazas); 
+    				return dto; 
+    			})
+				.toList(); 
+    	
+    	return ResponseEntity.ok(proyectosDto);
     }
 
     @Operation(summary = "Detalles de proyecto", description = "Devuelve los detalles de un proyecto por ID")
     @GetMapping("/detallesproyecto/{id}")
-    public ResponseEntity<Proyecto> detallesProyecto(@PathVariable int id) {
-        return ResponseEntity.ok(proyectoService.buscarUno(id));
+    public ResponseEntity<ProyectoDetallesVistaDto> detallesProyecto(@PathVariable int id) {
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	Proyecto proyecto = proyectoService.buscarUno(id); 
+    	Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+    	UsuarioProyecto usuarioProyecto = usuarioProyectoService.findByUsernameAndIdProyecto(username, id); 
+    	int aceptados = usuarioProyectoService.contarInscritosPorProyecto(id); 
+        int vacantesDisponibles = proyecto.getPlazas() - aceptados;
+        // Participantes aceptados
+        List<UsuarioVistaDetalleProyectoDto> participantes = usuarioProyectoService.findUsuariosAceptadosByProyecto(id);
+
+        ProyectoDetallesVistaDto dto = ProyectoDetallesVistaDto.builder()
+            .idProyecto(proyecto.getIdProyecto())
+        	//propietario
+        	.nombreUsuario(usuario.getNombre())
+            .apellidos(usuario.getApellidos())
+            .fotoUsuario(usuario.getFotoPerfil())
+            //Proyecto
+            .fechaInicio(proyecto.getFechaInicio())
+            .titulo(proyecto.getNombre())
+            .foto(proyecto.getFoto())
+            .fotoContenido(proyecto.getFotoContenido())
+            .descripcion(proyecto.getDescripcion())
+            .plazasRestantes(vacantesDisponibles)
+            .esFavorito(usuarioProyecto != null && usuarioProyecto.isFavorito())
+            //otros datos
+            .estadoAplicacion(usuarioProyecto != null ? usuarioProyecto.getEstado().name() : "NO_APLICADO")
+            //participantes
+            .participantes(participantes)
+            .build();
+
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "Añadir o quitar oferta de favoritos", description = "Marca o desmarca una oferta como favorita para un usuario")
@@ -242,14 +283,14 @@ public class UsuarioController {
         else if (puntuacion.compareTo(BigDecimal.valueOf(3)) == 0) valoracionEnum = Valoracion.NEUTRAL;
         else valoracionEnum = Valoracion.POSITIVA;
         
-        Resenna resenna = new Resenna(0, 
-        		resennaDto.getTitulo(), 
-        		resennaDto.getComentario(), 
-        		valoracionEnum, 
-        		puntuacion, 
-        		usuario, 
-        		empresa, 
-        		null);
+        Resenna resenna = Resenna.builder()
+        	    .titulo(resennaDto.getTitulo())
+        	    .comentario(resennaDto.getComentario())
+        	    .valoracion(valoracionEnum)
+        	    .puntuacion(puntuacion)
+        	    .usuario(usuario)
+        	    .empresa(null)
+        	    .build(); // omitimos la fecha si es generada
         
         resennaService.insertUno(resenna);
         

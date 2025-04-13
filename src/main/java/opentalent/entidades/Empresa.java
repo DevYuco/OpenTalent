@@ -40,7 +40,9 @@ public class Empresa implements Serializable {
     private boolean activo;
 
     private String email;
-
+    
+    private String descripcion; 
+    
     private String foto;
 
     @Column(name = "foto_contenido")

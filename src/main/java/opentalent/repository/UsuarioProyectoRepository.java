@@ -48,5 +48,16 @@ public interface UsuarioProyectoRepository extends JpaRepository<UsuarioProyecto
 	@Transactional
 	@Query("UPDATE UsuarioProyecto up SET up.estado = 'RECHAZADO' WHERE up.proyecto.idProyecto = ?1 ")
 	int rechazarSolicitudesPendientesPorProyecto(int idProyecto);
-
+	
+	@Query("SELECT COUNT(up) > 0 FROM UsuarioProyecto up WHERE up.usuario.username = ?1 AND up.proyecto.idProyecto = ?2 AND up.favorito = true")
+	boolean esFavorita(String username, int idProyecto);
+	
+	@Query("SELECT COUNT(up) FROM UsuarioProyecto up WHERE up.estado = 'ACEPTADO' AND up.proyecto.idProyecto = ?1") 
+	int contarInscritosPorProyecto(int idProyecto);
+	
+	@Query("SELECT up FROM UsuarioProyecto up WHERE up.usuario.username = ?1  AND up.proyecto.idProyecto = ?2")
+	UsuarioProyecto findByUsernameAndIdProyecto(String username, int idProyecto);
+	
+	@Query("SELECT up.usuario FROM UsuarioProyecto up WHERE up.proyecto.idProyecto = ?1 AND up.estado = 'ACEPTADO'") 
+	List<Usuario> findUsuariosAceptadosByProyecto(int idProyecto);
 }

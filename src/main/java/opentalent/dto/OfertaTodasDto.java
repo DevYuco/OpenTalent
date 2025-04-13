@@ -1,6 +1,7 @@
 package opentalent.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import opentalent.entidades.Direccion;
@@ -8,8 +9,10 @@ import opentalent.entidades.Direccion;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class OfertaTodasDto {
 	//Datos de oferta
+	private int idOfeta; 
 	private String fotoContenido; 
 	private String titulo; 
 	private String descripcion; 

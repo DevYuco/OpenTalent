@@ -42,7 +42,7 @@ public interface UsuarioOfertaRepository extends JpaRepository<UsuarioOferta, Us
 	@Query("SELECT COUNT(uo) FROM UsuarioOferta uo WHERE uo.estado = 'ACEPTADO' AND uo.oferta.empresa.cif = ?1") 
 	int contarInscritosPorEmpresa(String cif);
 	
-	@Query("SELECT COUNT(uo) > 0 FROM UsuarioOferta uo WHERE uo.usuario.username = ?1 AND uo.favorito = true")
+	@Query("SELECT COUNT(uo) > 0 FROM UsuarioOferta uo WHERE uo.usuario.username = ?1 AND uo.oferta.idOferta = ?2  AND uo.favorito = true")
 	boolean esFavorita(String username, int idOferta);
 	
 }

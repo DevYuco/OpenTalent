@@ -20,9 +20,9 @@ public class EmpresaDto {
     private String fotoContenido;
     private boolean destacado;
     private Direccion direccion; 
-    private List<Sector> sectores; 
     private int numeroInscritos;
-
+    private String descripcion; 
+    private List<Sector> sectores; 
     private List<OfertaDetallesEmpresaDto> ofertas;
     private List<ResennaDetallesEmpresaDto> resennas;
 }

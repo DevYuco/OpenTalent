@@ -2,9 +2,11 @@ package opentalent.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import opentalent.dto.UsuarioVistaDetalleProyectoDto;
 import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Proyecto;
 import opentalent.entidades.Usuario;
@@ -13,7 +15,9 @@ import opentalent.entidades.UsuarioProyectoId;
 import opentalent.repository.UsuarioProyectoRepository;
 @Service
 public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
-	
+    @Autowired
+    private ModelMapper modelMapper;
+    
 	@Autowired
 	private UsuarioProyectoRepository usuarioProyectoRepository;
 
@@ -118,6 +122,35 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
 	public int rechazarSolicitudesPendientesPorProyecto(int idProyecto) {
 		
 		return usuarioProyectoRepository.rechazarSolicitudesPendientesPorProyecto(idProyecto);
+	}
+
+	@Override
+	public boolean esFavorita(String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.esFavorita(username, idProyecto);
+	}
+
+	@Override
+	public int contarInscritosPorProyecto(int idProyecto) {
+		
+		return usuarioProyectoRepository.contarInscritosPorProyecto(idProyecto);
+	}
+
+	@Override
+	public UsuarioProyecto findByUsernameAndIdProyecto(String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.findByUsernameAndIdProyecto(username, idProyecto);
+	}
+
+	@Override
+	public List<UsuarioVistaDetalleProyectoDto> findUsuariosAceptadosByProyecto(int idProyecto) {
+		List<Usuario> usuarios = usuarioProyectoRepository.findUsuariosAceptadosByProyecto(idProyecto);
+		
+		List<UsuarioVistaDetalleProyectoDto> usuariosDto = usuarios.stream()
+				.map(u -> modelMapper.map(u,UsuarioVistaDetalleProyectoDto.class))
+				.toList(); 
+		
+		return usuariosDto;
 	}
 
 }

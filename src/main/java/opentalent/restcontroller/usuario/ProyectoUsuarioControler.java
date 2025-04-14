@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import opentalent.dto.CambiarFavoritoDto;
 import opentalent.dto.EstadoCandidatoDto;
 import opentalent.dto.ProyectoDetallesVistaDto;
 import opentalent.dto.ProyectosVistaDto;
@@ -69,7 +70,12 @@ public class ProyectoUsuarioControler {
     	return ResponseEntity.ok(proyectosDto);
     }
 
-    @Operation(summary = "Detalles de proyecto", description = "Devuelve los detalles de un proyecto por ID")
+    @Operation(
+    	    summary = "Detalles de proyecto",
+    	    description = "Devuelve los detalles completos de un proyecto específico, incluyendo información del propietario, participantes aceptados, número de vacantes disponibles y el estado de la aplicación del usuario autenticado."
+    	)
+    @ApiResponse(responseCode = "200", description = "Detalles del proyecto obtenidos correctamente")
+    @ApiResponse(responseCode = "404", description = "Proyecto o usuario no encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<ProyectoDetallesVistaDto> detallesProyecto(@PathVariable int id) {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -181,7 +187,13 @@ public class ProyectoUsuarioControler {
         return ResponseEntity.ok(dtos);
     }
 
-    @Operation(summary = "Responder solicitud de proyecto", description = "Permite aceptar o rechazar una solicitud de participación de un usuario en un proyecto. Solo el propietario del proyecto puede realizar esta acción.")
+    @Operation(
+    	    summary = "Responder solicitud de proyecto",
+    	    description = "Permite aceptar o rechazar una solicitud de participación de un usuario en un proyecto. Solo el propietario del proyecto puede realizar esta acción."
+    	)
+    @ApiResponse(responseCode = "200", description = "Estado del usuario actualizado correctamente")
+    @ApiResponse(responseCode = "403", description = "El usuario autenticado no es el propietario del proyecto")
+    @ApiResponse(responseCode = "404", description = "Datos incompletos o inválidos")
     @PostMapping("/responder-solicitud")
     public ResponseEntity<Integer> modificarEstadoSolicitud(@RequestBody EstadoCandidatoDto dto) {
         
@@ -236,5 +248,36 @@ public class ProyectoUsuarioControler {
         return ResponseEntity.ok(proyectoService.cancelarProyecto(idProyecto));
     }
     
-    
+    @Operation(
+    	    summary = "Obtener detalles de un proyecto para editar",
+    	    description = "Devuelve los datos completos de un proyecto específico para permitir su edición."
+    	)
+    @ApiResponse(responseCode = "200", description = "Proyecto encontrado con éxito")
+    @ApiResponse(responseCode = "404", description = "Proyecto no encontrado")
+    @GetMapping("/detalles/editar/{id}")
+    public ResponseEntity<Proyecto> buscarDetallesParaEditar(@PathVariable int id){
+        
+        Proyecto proyecto = proyectoService.buscarUno(id); 
+        
+        if(proyecto == null) {
+             return ResponseEntity.status(404).build();
+        }
+        return ResponseEntity.ok(proyecto);
+    } 
+    @Operation(
+    	    summary = "Cambiar estado de favorito",
+    	    description = "Permite marcar o desmarcar una oferta como favorita para el usuario autenticado."
+    	)
+    @ApiResponse(responseCode = "200", description = "Estado de favorito actualizado correctamente")
+    @ApiResponse(responseCode = "404", description = "No se encontró el proyecto o no se realizó ningún cambio")
+    @PostMapping("/favoritos/cambiar")
+    public ResponseEntity<Integer> cambiarEstadoFavoritosUsername(@RequestBody CambiarFavoritoDto dto){
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	
+    	int filasModificadas = usuarioProyectoService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getId()); 
+    	if(filasModificadas == 0) {
+    		return ResponseEntity.notFound().build();
+    	}
+    	return ResponseEntity.ok(filasModificadas);
+    }
 }

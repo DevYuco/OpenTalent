@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import opentalent.dto.CambiarFavoritoDto;
 import opentalent.dto.OfertaDetallesVistaDto;
@@ -35,7 +36,12 @@ public class OfertaUsuarioController {
     @Autowired
     private UsuarioOfertaService usuarioOfertaService;
 	
-	@Operation(summary = "Detalles de oferta", description = "Devuelve los datos de una oferta específica")
+    @Operation(
+    	    summary = "Detalles de oferta",
+    	    description = "Devuelve los datos detallados de una oferta específica incluyendo información de la empresa, estado de la aplicación del usuario, si es favorita y número de vacantes disponibles."
+    	)
+    @ApiResponse(responseCode = "200", description = "Detalles de la oferta obtenidos correctamente")
+    @ApiResponse(responseCode = "404", description = "La oferta no fue encontrada")
     @GetMapping("/{id}")
     public ResponseEntity<OfertaDetallesVistaDto> detallesOferta(@PathVariable Integer id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();   
@@ -125,10 +131,19 @@ public class OfertaUsuarioController {
         return ResponseEntity.ok(dtoList);
     }
 
-    @Operation(summary = "Cambiar estado de favorito", description = "Modifica el valor booleano de una oferta marcada como favorita para un usuario")
+    @Operation(
+    	    summary = "Cambiar estado de favorito",
+    	    description = "Permite marcar o desmarcar una oferta como favorita para el usuario autenticado."
+    	)
+    @ApiResponse(responseCode = "200", description = "Estado de favorito actualizado correctamente")
+    @ApiResponse(responseCode = "404", description = "No se encontró la oferta o no se realizó ningún cambio")
     @PostMapping("/favoritas/cambiar")
     public ResponseEntity<Integer> cambiarEstadoFavoritoUsername(@RequestBody CambiarFavoritoDto dto) {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	return ResponseEntity.ok(usuarioOfertaService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getIdOferta()));
+    	int filasModificadas = usuarioOfertaService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getId()); 
+    	if(filasModificadas == 0) {
+    		return ResponseEntity.notFound().build();
+    	}
+    	return ResponseEntity.ok(filasModificadas);
     }
 }

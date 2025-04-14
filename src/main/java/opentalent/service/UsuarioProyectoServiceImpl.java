@@ -153,4 +153,10 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
 		return usuariosDto;
 	}
 
+	@Override
+	public int cambiarEstadoFavorito(boolean estado, String username, int idProyecto) {
+		
+		return usuarioProyectoRepository.cambiarEstadoFavorito(estado, username, idProyecto); 
+	}
+
 }

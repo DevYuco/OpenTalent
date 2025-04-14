@@ -15,6 +15,7 @@ public interface UsuarioProyectoService extends IGenericoCRUD<UsuarioProyecto, U
 	int añadirProyectoFavoritos(String username, int idProyecto); 
 	int quitarProyectoFavoritos(String username, int idProyecto); 
 	Boolean comprobarFavorito(String username, int idProyecto); 
+	int cambiarEstadoFavorito(boolean estado, String username, int idProyecto); 
 	List<Proyecto> buscarProyectosFavsActivosPorUsername(String username);
 	List<Proyecto> buscarProyectosPropietarioYActivo(String username);
 	List<Usuario> postulantesPendientes(int idProyecto); 

@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CambiarFavoritoDto {
     private boolean estado;
-    private int idOferta;
+    private int id;
 }

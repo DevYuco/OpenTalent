@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OfertaDetallesEmpresaDto {
     private String idOferta; 
-	private String nombre;
+	private String titulo;
     private String descripcion;
     private String foto;
 }

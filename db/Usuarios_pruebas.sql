@@ -30,12 +30,11 @@ INSERT INTO Direcciones (calle, pais, codigo_postal, provincia, poblacion) VALUE
 ('Calle Mar 88', 'España', '03001', 'Alicante', 'Alicante');
 
 -- Empresas
-INSERT INTO Empresas (cif, nombre_empresa, email, id_direccion, foto, foto_contenido, destacado) VALUES
-('A12345678', 'Tech Solutions', 'contacto@techsolutions.com', 1, 'https://images.unsplash.com/photo-1591696205602-2f950c417cb9', 'https://images.unsplash.com/photo-1581090700227-1e8d92875aa0', TRUE),
-('B87654321', 'InnovateX', 'info@innovatex.es', 2, 'https://images.unsplash.com/photo-1605902711622-cfb43c4437d1', 'https://images.unsplash.com/photo-1573164713988-8665fc963095', FALSE),
-('C11223344', 'DataCorp', 'contacto@datacorp.com', 4, 'https://images.unsplash.com/photo-1629904853716-f0bc54eea481', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c', TRUE),
-('D55667788', 'GreenFuture', 'info@greenfuture.es', 5, 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde', 'https://images.unsplash.com/photo-1469474968028-56623f02e42e', FALSE);
-
+INSERT INTO Empresas (cif, nombre_empresa, email, id_direccion, foto, foto_contenido, destacado, descripcion) VALUES
+('A12345678', 'Tech Solutions', 'contacto@techsolutions.com', 1, 'https://images.unsplash.com/photo-1591696205602-2f950c417cb9', 'https://images.unsplash.com/photo-1581090700227-1e8d92875aa0', TRUE, 'Empresa dedicada a soluciones tecnológicas innovadoras.'),
+('B87654321', 'InnovateX', 'info@innovatex.es', 2, 'https://images.unsplash.com/photo-1605902711622-cfb43c4437d1', 'https://images.unsplash.com/photo-1573164713988-8665fc963095', FALSE, 'Innovación y desarrollo de software a medida.'),
+('C11223344', 'DataCorp', 'contacto@datacorp.com', 4, 'https://images.unsplash.com/photo-1629904853716-f0bc54eea481', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c', TRUE, 'Servicios de análisis de datos y consultoría tecnológica.'),
+('D55667788', 'GreenFuture', 'info@greenfuture.es', 5, 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde', 'https://images.unsplash.com/photo-1469474968028-56623f02e42e', FALSE, 'Soluciones sostenibles y energías renovables.');
 -- Sectores
 INSERT INTO Sectores (nombre, descripcion) VALUES
 ('Tecnología', 'Sector de tecnología e informática'),
@@ -70,11 +69,11 @@ INSERT INTO Ofertas (titulo, descripcion, fecha_inicio, fecha_fin, tipo_oferta, 
 ('Técnico Medio Ambiente', 'Colaboración en proyectos sostenibles', '2025-03-15', '2025-07-15', 'EMPLEO', 'ACTIVA', 2, 'D55667788', 4, 'https://images.unsplash.com/photo-1504198453319-5ce911bafcde', 'HIBRIDO');
 
 -- Usuario - Oferta
-INSERT INTO Usuario_Oferta (id_usuario, id_oferta, estado, favorito) VALUES
-(1, 1, 'PENDIENTE', TRUE),
-(2, 2, 'ACEPTADO', FALSE),
-(3, 4, 'PENDIENTE', TRUE),
-(4, 3, 'RECHAZADO', FALSE);
+INSERT INTO Usuario_Oferta (id_usuario, id_oferta, propietario, estado, favorito) VALUES
+(1, 1, FALSE, 'PENDIENTE', TRUE),
+(2, 2, FALSE, 'ACEPTADO', FALSE),
+(3, 4, FALSE, 'PENDIENTE', TRUE),
+(4, 3, FALSE, 'RECHAZADO', FALSE);
 
 -- Proyectos
 INSERT INTO Proyectos (nombre, activo, descripcion, fecha_inicio, fecha_fin, foto, foto_contenido, plazas) VALUES
@@ -83,11 +82,11 @@ INSERT INTO Proyectos (nombre, activo, descripcion, fecha_inicio, fecha_fin, fot
 ('EcoInnovación', TRUE, 'Iniciativa de sostenibilidad ambiental', '2025-02-01', '2025-06-30', 'https://images.unsplash.com/photo-1503437313881-503a91226402', 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6', 4);
 
 -- Usuario - Proyecto
-INSERT INTO Usuario_Proyecto (id_usuario, id_proyecto, estado, favorito) VALUES
-(1, 1, 'ACEPTADO', TRUE),
-(2, 2, 'PENDIENTE', FALSE),
-(3, 3, 'ACEPTADO', TRUE),
-(4, 1, 'RECHAZADO', FALSE);
+INSERT INTO Usuario_Proyecto (id_usuario, id_proyecto, propietario, estado, favorito) VALUES
+(1, 1, TRUE, 'ACEPTADO', TRUE),
+(2, 2, FALSE, 'PENDIENTE', FALSE),
+(3, 3, FALSE, 'ACEPTADO', TRUE),
+(4, 1, FALSE, 'RECHAZADO', FALSE);
 
 -- Reseñas
 INSERT INTO Resennas (titulo, comentario, valoracion, puntuacion, id_usuario, cif) VALUES

@@ -18,7 +18,7 @@ public class JwtTokenUtil {
 	private String SECRET_KEY;
 	
     // Tiempo de validez del token de acceso (5 minutos en milisegundos)
-    private static final long ACCESS_TOKEN_VALIDITY = 5 * 60 * 1000; 
+    private static final long ACCESS_TOKEN_VALIDITY = 20 * 60 * 1000; 
     
     // Tiempo de validez del token de refresh (7 días en milisegundos)
     private static final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000; 

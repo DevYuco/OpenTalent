@@ -77,8 +77,7 @@ public class UsuarioController {
     @Autowired
     private ResennaService resennaService;
 
-    @Operation(
-    		summary = "Empresas destacadas", description = "Devuelve una lista de empresas activas con el flag 'destacado' activado")
+    @Operation(summary = "Empresas destacadas", description = "Devuelve una lista de empresas activas con el flag 'destacado' activado")
     @ApiResponse(responseCode = "200", description = "Listado de empresas exitoso")
     @GetMapping("/home")
     public ResponseEntity<List<EmpresaHomeUsuarioDto>> home() {
@@ -96,7 +95,9 @@ public class UsuarioController {
     public ResponseEntity<EmpresaDto> detallesEmpresa(@PathVariable String cif) {
         Empresa empresa = empresaService.buscarUno(cif);
         
-        if (empresa == null) return ResponseEntity.notFound().build();
+        if (empresa == null) {
+        	return ResponseEntity.notFound().build();
+        }
         
         // Mapear los datos básicos de la empresa
         EmpresaDto empresaDto = modelMapper.map(empresa, EmpresaDto.class);
@@ -130,7 +131,9 @@ public class UsuarioController {
     	Oferta oferta = ofertaService.buscarUno(id);
     	
     	//Verificar oferta
-    	if (oferta == null) return ResponseEntity.notFound().build();
+    	if (oferta == null) {
+    		return ResponseEntity.notFound().build();
+    	}
     	
     	Empresa empresa = oferta.getEmpresa();
 
@@ -214,6 +217,11 @@ public class UsuarioController {
     	Proyecto proyecto = proyectoService.buscarUno(id); 
     	Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
     	UsuarioProyecto usuarioProyecto = usuarioProyectoService.findByUsernameAndIdProyecto(username, id); 
+    	
+    	if(proyecto == null || usuario == null) {
+    		return ResponseEntity.notFound().build();
+    	}
+
     	int aceptados = usuarioProyectoService.contarInscritosPorProyecto(id); 
         int vacantesDisponibles = proyecto.getPlazas() - aceptados;
         // Participantes aceptados
@@ -273,24 +281,32 @@ public class UsuarioController {
         Empresa empresa = empresaService.buscarUno(resennaDto.getCif());
         Valoracion valoracionEnum;
         
-        if (usuario == null || empresa == null) return ResponseEntity.notFound().build();
+        if (usuario == null || empresa == null) {
+        	return ResponseEntity.notFound().build();
+        }
         
         BigDecimal puntuacion = resennaDto.getPuntuacion();
         
-        if (puntuacion == null) return ResponseEntity.badRequest().body(false);
+        if (puntuacion == null) {
+        	return ResponseEntity.badRequest().body(false);
+        }
        
-        if (puntuacion.compareTo(BigDecimal.valueOf(3)) < 0) valoracionEnum = Valoracion.NEGATIVA;
-        else if (puntuacion.compareTo(BigDecimal.valueOf(3)) == 0) valoracionEnum = Valoracion.NEUTRAL;
-        else valoracionEnum = Valoracion.POSITIVA;
-        
+        if (puntuacion.compareTo(BigDecimal.valueOf(3)) < 0) {
+        	valoracionEnum = Valoracion.NEGATIVA;
+        }else if (puntuacion.compareTo(BigDecimal.valueOf(3)) == 0) {
+        	valoracionEnum = Valoracion.NEUTRAL;
+        }else {
+        	valoracionEnum = Valoracion.POSITIVA;
+        }
+
         Resenna resenna = Resenna.builder()
         	    .titulo(resennaDto.getTitulo())
         	    .comentario(resennaDto.getComentario())
         	    .valoracion(valoracionEnum)
         	    .puntuacion(puntuacion)
         	    .usuario(usuario)
-        	    .empresa(null)
-        	    .build(); // omitimos la fecha si es generada
+        	    .empresa(empresa)
+        	    .build(); 
         
         resennaService.insertUno(resenna);
         
@@ -298,15 +314,50 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Proyectos favoritos", description = "Obtiene los proyectos activos marcados como favoritos por el usuario")
-    @GetMapping("/proyectosfavs/{username}")
-    public ResponseEntity<List<Proyecto>> proyectosFavoritosActivosPorUsername(@PathVariable String username) {
-        return ResponseEntity.ok(usuarioProyectoService.buscarProyectosFavsActivosPorUsername(username));
+    @GetMapping("/proyectosfavs")
+    public ResponseEntity<List<ProyectosVistaDto>> proyectosFavoritosActivosPorUsername() {
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	List<Proyecto> proyectos = usuarioProyectoService.buscarProyectosFavsActivosPorUsername(username);
+    	
+    	List<ProyectosVistaDto> proyectosDto = proyectos.stream()
+    			.map(p -> {
+    				ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class); 
+    				boolean favorito = usuarioProyectoService.esFavorita(username, p.getIdProyecto()); 
+    				dto.setEsFavorito(favorito);
+    				int aceptados = usuarioProyectoService.contarInscritosPorProyecto(p.getIdProyecto()); 
+    				int plazas = p.getPlazas() - aceptados; 
+    				dto.setPlazasDisponibles(plazas); 
+    				return dto; 
+    			})
+				.toList(); 
+    	
+    	return ResponseEntity.ok(proyectosDto);
     }
 
     @Operation(summary = "Ofertas favoritas", description = "Obtiene las ofertas activas marcadas como favoritas por el usuario")
-    @GetMapping("/ofertasfavs/{username}")
-    public ResponseEntity<List<Oferta>> ofertasFavoritosActivasPorUsername(@PathVariable String username) {
-        return ResponseEntity.ok(usuarioOfertaService.buscarOfertasFavsActivasPorUsername(username));
+    @GetMapping("/ofertasfavs")
+    public ResponseEntity<List<OfertaTodasDto>> ofertasFavoritosActivasPorUsername() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<Oferta> ofertas = usuarioOfertaService.buscarOfertasFavsActivasPorUsername(username);
+
+        List<OfertaTodasDto> dtoList = ofertas.stream()
+        	    .map(oferta -> {
+        	        boolean favorita = usuarioOfertaService.esFavorita(username, oferta.getIdOferta());
+
+        	        return OfertaTodasDto.builder()
+        	            .idOfeta(oferta.getIdOferta())
+        	            .fotoContenido(oferta.getFotoContenido())
+        	            .titulo(oferta.getTitulo())
+        	            .descripcion(oferta.getDescripcion())
+        	            .foto(oferta.getEmpresa() != null ? oferta.getEmpresa().getFoto() : null)
+        	            .direccion(oferta.getEmpresa() != null ? oferta.getEmpresa().getDireccion() : null)
+        	            .esFavorita(favorita)
+        	            .build();
+        	    })
+        	    .toList();
+
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(summary = "Cambiar estado de favorito", description = "Modifica el valor booleano de una oferta marcada como favorita para un usuario")
@@ -318,7 +369,8 @@ public class UsuarioController {
     @Operation(summary = "Mis proyectos activos", description = "Devuelve los proyectos activos donde el usuario es propietario")
     @GetMapping("/misproyectos/{username}")
     public ResponseEntity<List<Proyecto>> buscarProyectosPropietarioYActivos(@PathVariable String username) {
-        return ResponseEntity.ok(usuarioProyectoService.buscarProyectosPropietarioYActivo(username));
+        
+    	return ResponseEntity.ok(usuarioProyectoService.buscarProyectosPropietarioYActivo(username));
     }
     
     @Operation(

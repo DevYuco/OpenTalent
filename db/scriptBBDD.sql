@@ -24,6 +24,7 @@ CREATE TABLE Empresas (
     cif VARCHAR(20) PRIMARY KEY, 
     nombre_empresa VARCHAR(255) NOT NULL,
     activo BOOLEAN DEFAULT TRUE,
+    descripcion TEXT, 
     email VARCHAR(255) UNIQUE NOT NULL,
     foto VARCHAR(255),
     foto_contenido VARCHAR(255),
@@ -94,6 +95,7 @@ CREATE TABLE Ofertas (
 CREATE TABLE Usuario_Oferta (
     id_usuario INT,
     id_oferta INT,
+    propietario BOOLEAN,
     fecha_aplicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     estado ENUM('PENDIENTE', 'ACEPTADO', 'RECHAZADO') DEFAULT 'PENDIENTE',
     favorito BOOLEAN DEFAULT FALSE,
@@ -121,6 +123,7 @@ CREATE TABLE Usuario_Proyecto (
     id_proyecto INT,
     estado ENUM('PENDIENTE', 'ACEPTADO', 'RECHAZADO') NOT NULL DEFAULT 'PENDIENTE',
     favorito BOOLEAN DEFAULT FALSE,
+    propietario BOOLEAN,
     PRIMARY KEY (id_usuario, id_proyecto),
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_proyecto) REFERENCES Proyectos(id_proyecto) ON DELETE CASCADE

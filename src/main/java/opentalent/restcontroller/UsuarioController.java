@@ -91,7 +91,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Detalles de empresa", description = "Obtiene los datos de una empresa a partir de su CIF")
-    @GetMapping("/detallesempresa/{cif}")
+    @GetMapping("/empresas/{cif}")
     public ResponseEntity<EmpresaDto> detallesEmpresa(@PathVariable String cif) {
         Empresa empresa = empresaService.buscarUno(cif);
         
@@ -124,7 +124,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Detalles de oferta", description = "Devuelve los datos de una oferta específica")
-    @GetMapping("/detallesoferta/{id}")
+    @GetMapping("/ofertas/{id}")
     public ResponseEntity<OfertaDetallesVistaDto> detallesOferta(@PathVariable Integer id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();   
     	
@@ -211,7 +211,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Detalles de proyecto", description = "Devuelve los detalles de un proyecto por ID")
-    @GetMapping("/detallesproyecto/{id}")
+    @GetMapping("/proyectos/{id}")
     public ResponseEntity<ProyectoDetallesVistaDto> detallesProyecto(@PathVariable int id) {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
     	Proyecto proyecto = proyectoService.buscarUno(id); 
@@ -250,35 +250,37 @@ public class UsuarioController {
         return ResponseEntity.ok(dto);
     }
 
-    @Operation(summary = "Añadir o quitar oferta de favoritos", description = "Marca o desmarca una oferta como favorita para un usuario")
-    @GetMapping("/añadirofertafav/{username}/{idOferta}")
-    public ResponseEntity<Boolean> añadirOfertaFavoritos(@PathVariable String username, @PathVariable int idOferta) {
-        if (usuarioOfertaService.comprobarFavorito(username, idOferta)) {
-            usuarioOfertaService.eliminarOfertaFavoritos(username, idOferta);
-            return ResponseEntity.ok(false);
-        } else {
-            usuarioOfertaService.añadirOfertaFavoritos(username, idOferta);
-            return ResponseEntity.ok(true);
-        }
-    }
-
-    @Operation(summary = "Añadir o quitar proyecto de favoritos", description = "Marca o desmarca un proyecto como favorito para un usuario")
-    @GetMapping("/añadirproyectofav/{username}/{idProyecto}")
-    public ResponseEntity<Boolean> añadirProyectoFavoritos(@PathVariable String username, @PathVariable int idProyecto) {
-        if (usuarioProyectoService.comprobarFavorito(username, idProyecto)) {
-            usuarioProyectoService.quitarProyectoFavoritos(username, idProyecto);
-            return ResponseEntity.ok(false);
-        } else {
-            usuarioProyectoService.añadirProyectoFavoritos(username, idProyecto);
-            return ResponseEntity.ok(true);
-        }
-    }
+//    @Operation(summary = "Añadir o quitar oferta de favoritos", description = "Marca o desmarca una oferta como favorita para un usuario")
+//    @GetMapping("/añadirofertafav/{username}/{idOferta}")
+//    public ResponseEntity<Boolean> añadirOfertaFavoritos(@PathVariable String username, @PathVariable int idOferta) {
+//        if (usuarioOfertaService.comprobarFavorito(username, idOferta)) {
+//            usuarioOfertaService.eliminarOfertaFavoritos(username, idOferta);
+//            return ResponseEntity.ok(false);
+//        } else {
+//            usuarioOfertaService.añadirOfertaFavoritos(username, idOferta);
+//            return ResponseEntity.ok(true);
+//        }
+//    }
+//
+//    @Operation(summary = "Añadir o quitar proyecto de favoritos", description = "Marca o desmarca un proyecto como favorito para un usuario")
+//    @GetMapping("/añadirproyectofav/{username}/{idProyecto}")
+//    public ResponseEntity<Boolean> añadirProyectoFavoritos(@PathVariable String username, @PathVariable int idProyecto) {
+//        if (usuarioProyectoService.comprobarFavorito(username, idProyecto)) {
+//            usuarioProyectoService.quitarProyectoFavoritos(username, idProyecto);
+//            return ResponseEntity.ok(false);
+//        } else {
+//            usuarioProyectoService.añadirProyectoFavoritos(username, idProyecto);
+//            return ResponseEntity.ok(true);
+//        }
+//    }
 
     @Operation(summary = "Añadir reseña a empresa", description = "Permite a un usuario publicar una reseña hacia una empresa con valoración y comentario")
-    @PostMapping("/addresenna")
+    @PostMapping("/reseñas")
     public ResponseEntity<Boolean> añadirReseña(@RequestBody ResennaDto resennaDto) {
-        Usuario usuario = usuarioService.buscarPorUsernameEntidad(resennaDto.getUsername());
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
         Empresa empresa = empresaService.buscarUno(resennaDto.getCif());
+        
         Valoracion valoracionEnum;
         
         if (usuario == null || empresa == null) {
@@ -314,11 +316,10 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Proyectos favoritos", description = "Obtiene los proyectos activos marcados como favoritos por el usuario")
-    @GetMapping("/proyectosfavs")
+    @GetMapping("/proyectos/favoritos")
     public ResponseEntity<List<ProyectosVistaDto>> proyectosFavoritosActivosPorUsername() {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
     	List<Proyecto> proyectos = usuarioProyectoService.buscarProyectosFavsActivosPorUsername(username);
-    	
     	List<ProyectosVistaDto> proyectosDto = proyectos.stream()
     			.map(p -> {
     				ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class); 
@@ -335,7 +336,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Ofertas favoritas", description = "Obtiene las ofertas activas marcadas como favoritas por el usuario")
-    @GetMapping("/ofertasfavs")
+    @GetMapping("/ofertas/favoritas")
     public ResponseEntity<List<OfertaTodasDto>> ofertasFavoritosActivasPorUsername() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -361,15 +362,16 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Cambiar estado de favorito", description = "Modifica el valor booleano de una oferta marcada como favorita para un usuario")
-    @PostMapping("/cambiarestadofavorito")
+    @PostMapping("/ofertas/favoritas/cambiar")
     public ResponseEntity<Integer> cambiarEstadoFavoritoUsername(@RequestBody CambiarFavoritoDto dto) {
-        return ResponseEntity.ok(usuarioOfertaService.cambiarEstadoFavorito(dto.isEstado(), dto.getUsername(), dto.getIdOferta()));
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    	return ResponseEntity.ok(usuarioOfertaService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getIdOferta()));
     }
 
     @Operation(summary = "Mis proyectos activos", description = "Devuelve los proyectos activos donde el usuario es propietario")
-    @GetMapping("/misproyectos/{username}")
-    public ResponseEntity<List<Proyecto>> buscarProyectosPropietarioYActivos(@PathVariable String username) {
-        
+    @GetMapping("/proyectos/mis-proyectos")
+    public ResponseEntity<List<Proyecto>> buscarProyectosPropietarioYActivos() {
+    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
     	return ResponseEntity.ok(usuarioProyectoService.buscarProyectosPropietarioYActivo(username));
     }
     
@@ -381,7 +383,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Proyecto editado correctamente")
     @ApiResponse(responseCode = "403", description = "El usuario no es propietario del proyecto")
     @ApiResponse(responseCode = "404", description = "Proyecto no proporcionado")
-    @PostMapping("/editarproyecto")
+    @PostMapping("/proyectos")
     public ResponseEntity<Proyecto> editarProyecto(@RequestBody Proyecto proyecto) {
         if (proyecto == null) {
             return ResponseEntity.notFound().build();
@@ -403,7 +405,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Postulantes a un proyecto", description = "Devuelve la lista de usuarios que se han postulado a un proyecto y están pendientes")
-    @GetMapping("/postulantes/{idProyecto}")
+    @GetMapping("/proyectos/{idProyecto}/postulantes")
     public ResponseEntity<List<UsuarioDto>> postulantesDeProyectoActivo(@PathVariable int idProyecto) {
         List<Usuario> usuarios = usuarioProyectoService.postulantesPendientes(idProyecto);
         
@@ -417,7 +419,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Responder solicitud de proyecto", description = "Permite aceptar o rechazar una solicitud de participación de un usuario en un proyecto. Solo el propietario del proyecto puede realizar esta acción.")
-    @PostMapping("/respondersolicitud")
+    @PostMapping("/proyectos/responder-solicitud")
     public ResponseEntity<Integer> modificarEstadoSolicitud(@RequestBody EstadoCandidatoDto dto) {
         
         // Validación de entrada
@@ -454,7 +456,7 @@ public class UsuarioController {
     	)
     @ApiResponse(responseCode = "200", description = "Proyecto cancelado correctamente")
     @ApiResponse(responseCode = "403", description = "El usuario no es propietario del proyecto")
-    @PostMapping("/cancelarproyecto/{idProyecto}")
+    @PostMapping("/proyectos/{idProyecto}/cancelar")
     public ResponseEntity<Integer> cancelarProyecto(@PathVariable int idProyecto) {
         // Obtener el username del usuario autenticado desde el JWT
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -470,4 +472,6 @@ public class UsuarioController {
         // Cancelar el proyecto (marcar como inactivo)
         return ResponseEntity.ok(proyectoService.cancelarProyecto(idProyecto));
     }
+    
+    
 } 

@@ -12,6 +12,5 @@ public class ResennaDto {
 	private String titulo;
     private String comentario;
     private BigDecimal puntuacion;
-    private String username; 
     private String cif; 
 }

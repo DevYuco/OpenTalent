@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CambiarFavoritoDto {
     private boolean estado;
-    private String username;
     private int idOferta;
 }

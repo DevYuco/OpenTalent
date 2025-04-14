@@ -9,6 +9,7 @@ import opentalent.entidades.Direccion;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioDto {
+	private String idUsuario; 
 	private String nombre;
     private String apellidos;
     private String email;

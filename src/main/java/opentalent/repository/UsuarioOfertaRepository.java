@@ -44,5 +44,5 @@ public interface UsuarioOfertaRepository extends JpaRepository<UsuarioOferta, Us
 	
 	@Query("SELECT COUNT(uo) > 0 FROM UsuarioOferta uo WHERE uo.usuario.username = ?1 AND uo.oferta.idOferta = ?2  AND uo.favorito = true")
 	boolean esFavorita(String username, int idOferta);
-	
+
 }

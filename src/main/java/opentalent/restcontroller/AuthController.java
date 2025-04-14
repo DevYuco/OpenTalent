@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import opentalent.dto.LoginRequest;
 import opentalent.dto.RegistroDto;
 import opentalent.dto.UsuarioDto;
@@ -29,6 +30,7 @@ import opentalent.service.UsuarioService;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*")
+@Tag(name = "Login - Registro", description = "Endpoints para hacer login y registro")
 public class AuthController {
 	
     @Autowired

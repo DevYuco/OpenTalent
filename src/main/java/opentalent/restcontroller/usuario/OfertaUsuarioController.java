@@ -1,7 +1,9 @@
 package opentalent.restcontroller.usuario;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,10 +20,14 @@ import opentalent.dto.CambiarFavoritoDto;
 import opentalent.dto.OfertaDetallesVistaDto;
 import opentalent.dto.OfertaTodasDto;
 import opentalent.entidades.Empresa;
+import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Oferta;
+import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioOferta;
+import opentalent.entidades.UsuarioOfertaId;
 import opentalent.service.OfertaService;
 import opentalent.service.UsuarioOfertaService;
+import opentalent.service.UsuarioService;
 
 
 @RestController
@@ -36,6 +42,9 @@ public class OfertaUsuarioController {
     @Autowired
     private UsuarioOfertaService usuarioOfertaService;
 	
+    @Autowired
+    private UsuarioService usuarioService; 
+    
     @Operation(
     	    summary = "Detalles de oferta",
     	    description = "Devuelve los datos detallados de una oferta específica incluyendo información de la empresa, estado de la aplicación del usuario, si es favorita y número de vacantes disponibles."
@@ -145,5 +154,43 @@ public class OfertaUsuarioController {
     		return ResponseEntity.notFound().build();
     	}
     	return ResponseEntity.ok(filasModificadas);
+    }
+    
+    @Operation(
+    	    summary = "Inscribirse en una oferta",
+    	    description = "Permite al usuario autenticado inscribirse en una oferta específica si no está ya inscrito."
+    	)
+    @ApiResponse(responseCode = "200", description = "Inscripción realizada correctamente")
+    @ApiResponse(responseCode = "404", description = "Usuario u oferta no encontrada")
+    @ApiResponse(responseCode = "409", description = "El usuario ya está inscrito en esta oferta")
+    @PostMapping("/inscribir/{idOferta}")
+    public ResponseEntity<?> inscribirOferta(@PathVariable int idOferta) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+        Oferta oferta = ofertaService.buscarUno(idOferta);
+
+        if (usuario == null || oferta == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario u oferta no encontrada");
+        }
+
+        UsuarioOfertaId id = new UsuarioOfertaId(usuario.getIdUsuario(), oferta.getIdOferta());
+
+        if (usuarioOfertaService.existeInscripcion(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya estas inscrito en esta oferta.");
+        }
+
+        UsuarioOferta inscripcion = UsuarioOferta.builder()
+                .id(id)
+                .usuario(usuario)
+                .fechaAplicacion(LocalDateTime.now())
+                .oferta(oferta)
+                .estado(EstadoAplicacion.PENDIENTE)
+                .favorito(true) // o false si lo prefieres
+                .build();
+
+        usuarioOfertaService.insertUno(inscripcion);
+
+        return ResponseEntity.ok("Inscripción a la oferta realizada correctamente.");
     }
 }

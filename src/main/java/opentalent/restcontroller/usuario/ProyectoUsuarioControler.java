@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Proyecto;
 import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioProyecto;
+import opentalent.entidades.UsuarioProyectoId;
 import opentalent.service.ProyectoService;
 import opentalent.service.UsuarioProyectoService;
 import opentalent.service.UsuarioService;
@@ -152,7 +154,7 @@ public class ProyectoUsuarioControler {
     @ApiResponse(responseCode = "200", description = "Proyecto editado correctamente")
     @ApiResponse(responseCode = "403", description = "El usuario no es propietario del proyecto")
     @ApiResponse(responseCode = "404", description = "Proyecto no proporcionado")
-    @PostMapping("/")
+    @PutMapping("/")
     public ResponseEntity<Proyecto> editarProyecto(@RequestBody Proyecto proyecto) {
         if (proyecto == null) {
             return ResponseEntity.notFound().build();
@@ -280,4 +282,85 @@ public class ProyectoUsuarioControler {
     	}
     	return ResponseEntity.ok(filasModificadas);
     }
+    
+    @Operation(
+    	    summary = "Añadir nuevo proyecto",
+    	    description = "Permite a un usuario autenticado crear un nuevo proyecto. El usuario se registra automáticamente como propietario del mismo."
+    	)
+    @ApiResponse(responseCode = "200", description = "Proyecto creado correctamente")
+    @ApiResponse(responseCode = "401", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "500", description = "Error al guardar el proyecto")
+    @PostMapping("/annadirproyecto")
+    public ResponseEntity<?> añadirProyecto(@RequestBody Proyecto proyecto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autorizado");
+        }
+
+        // 1. Marcar el proyecto como activo
+        proyecto.setActivo(true);
+
+        // 2. Guardar el proyecto primero
+        Proyecto proyectoGuardado = proyectoService.insertUno(proyecto);
+
+        if (proyectoGuardado == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el proyecto");
+        }
+
+        // 3. Crear entrada en UsuarioProyecto (como propietario)
+        UsuarioProyectoId id = new UsuarioProyectoId(usuario.getIdUsuario(), proyectoGuardado.getIdProyecto());
+
+        UsuarioProyecto uProyecto = UsuarioProyecto.builder()
+                .id(id)
+                .usuario(usuario)
+                .proyecto(proyectoGuardado)
+                .estado(EstadoAplicacion.ACEPTADO)
+                .propietario(true)
+                .favorito(true)
+                .build();
+
+        usuarioProyectoService.insertUno(uProyecto);
+
+        return ResponseEntity.ok(proyectoGuardado);
+    }
+    
+    @Operation(
+    	    summary = "Solicitar participación en un proyecto",
+    	    description = "Permite a un usuario autenticado enviar una solicitud de participación en un proyecto. Si ya ha solicitado antes, devuelve un conflicto."
+    	)
+    @ApiResponse(responseCode = "200", description = "Solicitud enviada correctamente")
+    @ApiResponse(responseCode = "404", description = "Usuario o proyecto no encontrado")
+    @ApiResponse(responseCode = "409", description = "El usuario ya ha solicitado participar en el proyecto")
+    @PostMapping("/solicitar/{idProyecto}")
+    public ResponseEntity<?> solicitarProyecto(@PathVariable int idProyecto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+        Proyecto proyecto = proyectoService.buscarUno(idProyecto);
+
+        if (usuario == null || proyecto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario o proyecto no encontrado");
+        }
+
+        UsuarioProyectoId id = new UsuarioProyectoId(usuario.getIdUsuario(), proyecto.getIdProyecto());
+
+        if (usuarioProyectoService.buscarUno(id) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya has solicitado participar en este proyecto.");
+        }
+
+        UsuarioProyecto solicitud = UsuarioProyecto.builder()
+                .id(id)
+                .usuario(usuario)
+                .proyecto(proyecto)
+                .estado(EstadoAplicacion.PENDIENTE)
+                .favorito(true) // marcar como favorito por defecto
+                .build();
+
+        usuarioProyectoService.insertUno(solicitud);
+
+        return ResponseEntity.ok("Solicitud enviada correctamente al proyecto.");
+    }
+    
 }

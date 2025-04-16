@@ -17,4 +17,5 @@ public interface UsuarioOfertaService extends IGenericoCRUD<UsuarioOferta, Usuar
 	int contarAceptadosPorOferta(int idOferta);
 	int contarInscritosPorEmpresa(String cif);
 	boolean esFavorita(String username, int idOferta);
+	boolean existeInscripcion(UsuarioOfertaId id);
 }

@@ -118,4 +118,10 @@ public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 		return usuarioOfertaRepository.esFavorita(username, idOferta);
 	}
 
+	@Override
+	public boolean existeInscripcion(UsuarioOfertaId id) {
+		
+		return usuarioOfertaRepository.existsById(id);
+	}
+
 }

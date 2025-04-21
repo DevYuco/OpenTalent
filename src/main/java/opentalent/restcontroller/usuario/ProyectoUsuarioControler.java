@@ -1,6 +1,8 @@
 package opentalent.restcontroller.usuario;
 
 import java.util.List;
+import java.util.Map;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -296,7 +298,7 @@ public class ProyectoUsuarioControler {
         Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
 
         if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autorizado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("mensaje","Usuario no autorizado"));
         }
 
         // 1. Marcar el proyecto como activo
@@ -306,7 +308,7 @@ public class ProyectoUsuarioControler {
         Proyecto proyectoGuardado = proyectoService.insertUno(proyecto);
 
         if (proyectoGuardado == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el proyecto");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("mensaje","Error al guardar el proyecto"));
         }
 
         // 3. Crear entrada en UsuarioProyecto (como propietario)
@@ -341,13 +343,13 @@ public class ProyectoUsuarioControler {
         Proyecto proyecto = proyectoService.buscarUno(idProyecto);
 
         if (usuario == null || proyecto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario o proyecto no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje","Usuario o proyecto no encontrado"));
         }
 
         UsuarioProyectoId id = new UsuarioProyectoId(usuario.getIdUsuario(), proyecto.getIdProyecto());
 
         if (usuarioProyectoService.buscarUno(id) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya has solicitado participar en este proyecto.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Ya has solicitado participar en este proyecto."));
         }
 
         UsuarioProyecto solicitud = UsuarioProyecto.builder()
@@ -360,7 +362,7 @@ public class ProyectoUsuarioControler {
 
         usuarioProyectoService.insertUno(solicitud);
 
-        return ResponseEntity.ok("Solicitud enviada correctamente al proyecto.");
+        return ResponseEntity.ok(Map.of("mensaje","Solicitud enviada correctamente al proyecto."));
     }
     
 }

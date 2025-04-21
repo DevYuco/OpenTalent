@@ -2,6 +2,8 @@ package opentalent.restcontroller.usuario;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -171,13 +173,13 @@ public class OfertaUsuarioController {
         Oferta oferta = ofertaService.buscarUno(idOferta);
 
         if (usuario == null || oferta == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario u oferta no encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje","Usuario u oferta no encontrada"));
         }
 
         UsuarioOfertaId id = new UsuarioOfertaId(usuario.getIdUsuario(), oferta.getIdOferta());
 
         if (usuarioOfertaService.existeInscripcion(id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya estas inscrito en esta oferta.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Ya estas inscrito en esta oferta."));
         }
 
         UsuarioOferta inscripcion = UsuarioOferta.builder()
@@ -191,6 +193,6 @@ public class OfertaUsuarioController {
 
         usuarioOfertaService.insertUno(inscripcion);
 
-        return ResponseEntity.ok("Inscripción a la oferta realizada correctamente.");
+        return ResponseEntity.ok(Map.of("mensaje","Inscripción a la oferta realizada correctamente."));
     }
 }

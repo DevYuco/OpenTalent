@@ -15,7 +15,7 @@ import opentalent.service.EmpresaService;
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin(origins = "*")
-@Tag(name = "Usuario - Home", description = "Endpoints para visualizar home desde el perfil usuario")
+@Tag(name = "2 - Usuario - Home", description = "Endpoints para visualizar home desde el perfil usuario")
 public class HomeUsuarioController {
 
     @Autowired

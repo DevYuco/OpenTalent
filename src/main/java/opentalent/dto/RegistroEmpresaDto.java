@@ -19,6 +19,7 @@ public class RegistroEmpresaDto {
     private String password;
     private LocalDate fechaNacimiento;
     private String telefono;
+    private String username; 
 
     // Dirección
     private String pais;

@@ -12,7 +12,7 @@ import opentalent.entidades.Direccion;
 @Builder
 public class OfertaTodasDto {
 	//Datos de oferta
-	private int idOfeta; 
+	private int idOferta; 
 	private String fotoContenido; 
 	private String titulo; 
 	private String descripcion; 

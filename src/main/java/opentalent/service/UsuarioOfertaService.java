@@ -3,6 +3,7 @@ package opentalent.service;
 import java.util.List;
 
 import opentalent.entidades.Oferta;
+import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioOferta;
 import opentalent.entidades.UsuarioOfertaId;
 import opentalent.repository.IGenericoCRUD;
@@ -18,4 +19,8 @@ public interface UsuarioOfertaService extends IGenericoCRUD<UsuarioOferta, Usuar
 	int contarInscritosPorEmpresa(String cif);
 	boolean esFavorita(String username, int idOferta);
 	boolean existeInscripcion(UsuarioOfertaId id);
+	List<Usuario> postulantesPendientes(int idOferta); 
+	int cerrarPostulacionesPorOferta(int idOferta);
+	int aceptarSolicitud(int idOferta, int idUsuario);
+	int rechazarSolicitud(int idOferta, int idUsuario);
 }

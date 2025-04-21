@@ -3,7 +3,6 @@ package opentalent.restcontroller.usuario;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,7 @@ import opentalent.service.UsuarioService;
 @RestController
 @RequestMapping("/usuario/ofertas")
 @CrossOrigin(origins = "*")
-@Tag(name = "Usuario - Ofertas", description = "Endpoints para gestionar ofertas desde el perfil usuario")
+@Tag(name = "3 - Usuario - Ofertas", description = "Endpoints para gestionar ofertas desde el perfil usuario")
 public class OfertaUsuarioController {
 	
     @Autowired
@@ -102,7 +101,7 @@ public class OfertaUsuarioController {
         	        boolean favorita = usuarioOfertaService.esFavorita(username, oferta.getIdOferta());
 
         	        return OfertaTodasDto.builder()
-        	            .idOfeta(oferta.getIdOferta())
+        	            .idOferta(oferta.getIdOferta())
         	            .fotoContenido(oferta.getFotoContenido())
         	            .titulo(oferta.getTitulo())
         	            .descripcion(oferta.getDescripcion())
@@ -128,7 +127,7 @@ public class OfertaUsuarioController {
         	        boolean favorita = usuarioOfertaService.esFavorita(username, oferta.getIdOferta());
 
         	        return OfertaTodasDto.builder()
-        	            .idOfeta(oferta.getIdOferta())
+        	            .idOferta(oferta.getIdOferta())
         	            .fotoContenido(oferta.getFotoContenido())
         	            .titulo(oferta.getTitulo())
         	            .descripcion(oferta.getDescripcion())

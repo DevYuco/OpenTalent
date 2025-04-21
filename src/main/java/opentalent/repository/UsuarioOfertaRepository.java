@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import opentalent.entidades.Oferta;
+import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioOferta;
 import opentalent.entidades.UsuarioOfertaId;
 
@@ -45,4 +46,22 @@ public interface UsuarioOfertaRepository extends JpaRepository<UsuarioOferta, Us
 	@Query("SELECT COUNT(uo) > 0 FROM UsuarioOferta uo WHERE uo.usuario.username = ?1 AND uo.oferta.idOferta = ?2  AND uo.favorito = true")
 	boolean esFavorita(String username, int idOferta);
 
+	@Query("SELECT uo.usuario FROM UsuarioOferta uo WHERE uo.estado = 'PENDIENTE' AND uo.oferta.idOferta = ?1 ")
+	List<Usuario> postulantesPendientes(int idOferta); 
+	
+	@Modifying
+	@Transactional
+	@Query("UPDATE UsuarioOferta uo SET uo.estado = 'RECHAZADO' WHERE uo.oferta.idOferta = ?1 ")
+	int cerrarPostulacionesPorOferta(int idOferta);
+	
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE UsuarioOferta uo SET uo.estado = 'ACEPTADO' WHERE uo.oferta.idOferta = ?1 AND uo.usuario.idUsuario = ?2")
+	int aceptarSolicitud(int idOferta, int idUsuario);
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE UsuarioOferta uo SET uo.estado = 'RECHAZADO' WHERE uo.oferta.idOferta = ?1 AND uo.usuario.idUsuario = ?2")
+	int rechazarSolicitud(int idOferta, int idUsuario);
 }

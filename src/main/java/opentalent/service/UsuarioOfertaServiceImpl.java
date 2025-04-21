@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import opentalent.entidades.Oferta;
+import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioOferta;
 import opentalent.entidades.UsuarioOfertaId;
 import opentalent.repository.UsuarioOfertaRepository;
@@ -122,6 +123,30 @@ public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 	public boolean existeInscripcion(UsuarioOfertaId id) {
 		
 		return usuarioOfertaRepository.existsById(id);
+	}
+
+	@Override
+	public List<Usuario> postulantesPendientes(int idOferta) {
+		
+		return usuarioOfertaRepository.postulantesPendientes(idOferta);
+	}
+
+	@Override
+	public int cerrarPostulacionesPorOferta(int idOferta) {
+		
+		return usuarioOfertaRepository.cerrarPostulacionesPorOferta(idOferta);
+	}
+
+	@Override
+	public int aceptarSolicitud(int idOferta, int idUsuario) {
+		
+		return usuarioOfertaRepository.aceptarSolicitud(idOferta, idUsuario);
+	}
+
+	@Override
+	public int rechazarSolicitud(int idOferta, int idUsuario) {
+		
+		return usuarioOfertaRepository.rechazarSolicitud(idOferta, idUsuario);
 	}
 
 }

@@ -63,4 +63,10 @@ public class SectorServiceImpl implements SectorService {
 		}
 	}
 
+	@Override
+	public Sector findByName(String nombre) {
+		
+		return sectorRepository.findByName(nombre);
+	}
+
 }

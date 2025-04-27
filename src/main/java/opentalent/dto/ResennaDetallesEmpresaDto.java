@@ -10,7 +10,8 @@ import opentalent.entidades.Valoracion;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResennaDetallesEmpresaDto {
-    private String titulo;
+    private int idResenna; 
+	private String titulo;
     private String comentario;
     private BigDecimal puntuacion;
     private Valoracion valoracion;

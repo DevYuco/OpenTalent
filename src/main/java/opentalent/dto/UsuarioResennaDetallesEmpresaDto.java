@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioResennaDetallesEmpresaDto {
-	private int idResenna;
+	private int idUsuario;
 	private String nombre;
     private String apellidos;
     private String fotoPerfil;

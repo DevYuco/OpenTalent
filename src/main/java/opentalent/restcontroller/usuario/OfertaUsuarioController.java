@@ -149,12 +149,18 @@ public class OfertaUsuarioController {
     @ApiResponse(responseCode = "404", description = "No se encontró la oferta o no se realizó ningún cambio")
     @PostMapping("/favoritas/cambiar")
     public ResponseEntity<Integer> cambiarEstadoFavoritoUsername(@RequestBody CambiarFavoritoDto dto) {
-    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	int filasModificadas = usuarioOfertaService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getId()); 
-    	if(filasModificadas == 0) {
-    		return ResponseEntity.notFound().build();
-    	}
-    	return ResponseEntity.ok(filasModificadas);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        boolean esFavorito = dto.isEstado(); // true = marcar favorito, false = desmarcar
+        int idOferta = dto.getId();
+
+        int filasModificadas = usuarioOfertaService.cambiarEstadoFavorito(esFavorito, username, idOferta);
+
+        if (filasModificadas == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(filasModificadas);
     }
     
     @Operation(

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Oferta;
 import opentalent.entidades.Usuario;
 import opentalent.entidades.UsuarioOferta;
@@ -12,10 +13,15 @@ import opentalent.entidades.UsuarioOfertaId;
 import opentalent.repository.UsuarioOfertaRepository;
 @Service
 public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
+	@Autowired
+	private UsuarioService usuarioService; 
 	
 	@Autowired
 	private UsuarioOfertaRepository usuarioOfertaRepository;
-
+	
+	@Autowired 
+	private OfertaService ofertaService; 
+	
 	@Override
 	public List<UsuarioOferta> buscarTodos() {
 		
@@ -91,8 +97,53 @@ public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 
 	@Override
 	public int cambiarEstadoFavorito(boolean estado, String username, int idOferta) {
-		
-		return usuarioOfertaRepository.cambiarEstadoFavorito(estado, username, idOferta);
+	    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+
+	    if (usuario == null) {
+	        return 0;
+	    }
+
+	    UsuarioOfertaId id = new UsuarioOfertaId(usuario.getIdUsuario(), idOferta);
+	    UsuarioOferta usuarioOferta = usuarioOfertaRepository.findById(id).orElse(null);
+
+	    if (usuarioOferta == null) {
+	        // Si no existe, crear una relación SOLO como favorito
+	        if (estado) {
+	            UsuarioOferta nuevoFavorito = UsuarioOferta.builder()
+	                .id(id)
+	                .usuario(usuario)
+	                .oferta(ofertaService.buscarUno(idOferta))
+	                .estado(EstadoAplicacion.FAVORITO)
+	                .propietario(false)
+	                .favorito(true)
+	                .build();
+	            usuarioOfertaRepository.save(nuevoFavorito);
+	            return 1;
+	        } else {
+	            // Si quiere desmarcar pero no existía, nada que hacer
+	            return 0;
+	        }
+	    }
+
+	    // Si ya existía inscripción o favorito
+	    if (estado) {
+	        usuarioOferta.setFavorito(true);
+	        if (usuarioOferta.getEstado() == EstadoAplicacion.PENDIENTE || usuarioOferta.getEstado() == EstadoAplicacion.ACEPTADO || usuarioOferta.getEstado() == EstadoAplicacion.RECHAZADO) {
+	            // Si ya está en proceso, solo setea favorito
+	        } else {
+	            usuarioOferta.setEstado(EstadoAplicacion.FAVORITO);
+	        }
+	    } else {
+	        usuarioOferta.setFavorito(false);
+	        if (usuarioOferta.getEstado() == EstadoAplicacion.FAVORITO) {
+	            // Si estaba SOLO como favorito, eliminar la inscripción
+	            usuarioOfertaRepository.delete(usuarioOferta);
+	            return 1;
+	        }
+	    }
+
+	    usuarioOfertaRepository.save(usuarioOferta);
+	    return 1;
 	}
 
 	@Override

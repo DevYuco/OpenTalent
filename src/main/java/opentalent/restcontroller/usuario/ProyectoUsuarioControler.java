@@ -268,21 +268,23 @@ public class ProyectoUsuarioControler {
         }
         return ResponseEntity.ok(proyecto);
     } 
+    
     @Operation(
-    	    summary = "Cambiar estado de favorito",
-    	    description = "Permite marcar o desmarcar una oferta como favorita para el usuario autenticado."
+    	    summary = "Cambiar estado de favorito en proyectos",
+    	    description = "Permite marcar o desmarcar un proyecto como favorito para el usuario autenticado."
     	)
     @ApiResponse(responseCode = "200", description = "Estado de favorito actualizado correctamente")
     @ApiResponse(responseCode = "404", description = "No se encontró el proyecto o no se realizó ningún cambio")
     @PostMapping("/favoritos/cambiar")
-    public ResponseEntity<Integer> cambiarEstadoFavoritosUsername(@RequestBody CambiarFavoritoDto dto){
-    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	
-    	int filasModificadas = usuarioProyectoService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getId()); 
-    	if(filasModificadas == 0) {
-    		return ResponseEntity.notFound().build();
-    	}
-    	return ResponseEntity.ok(filasModificadas);
+    public ResponseEntity<Integer> cambiarEstadoFavoritosUsername(@RequestBody CambiarFavoritoDto dto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        int filasModificadas = usuarioProyectoService.cambiarEstadoFavorito(dto.isEstado(), username, dto.getId());
+
+        if (filasModificadas == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(filasModificadas);
     }
     
     @Operation(

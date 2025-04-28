@@ -97,7 +97,7 @@ CREATE TABLE Usuario_Oferta (
     id_oferta INT,
     propietario BOOLEAN,
     fecha_aplicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado ENUM('PENDIENTE', 'ACEPTADO', 'RECHAZADO') DEFAULT 'PENDIENTE',
+    estado ENUM('PENDIENTE', 'ACEPTADO', 'RECHAZADO','FAVORITO') NOT NULL DEFAULT 'PENDIENTE',
     favorito BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id_usuario, id_oferta),
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
@@ -121,7 +121,7 @@ CREATE TABLE Proyectos (
 CREATE TABLE Usuario_Proyecto (
     id_usuario INT,
     id_proyecto INT,
-    estado ENUM('PENDIENTE', 'ACEPTADO', 'RECHAZADO') NOT NULL DEFAULT 'PENDIENTE',
+    estado ENUM('PENDIENTE', 'ACEPTADO', 'RECHAZADO','FAVORITO') NOT NULL DEFAULT 'PENDIENTE',
     favorito BOOLEAN DEFAULT FALSE,
     propietario BOOLEAN,
     PRIMARY KEY (id_usuario, id_proyecto),
@@ -144,3 +144,4 @@ CREATE TABLE Resennas (
     FOREIGN KEY (cif) REFERENCES Empresas(cif) ON DELETE CASCADE,
     FOREIGN KEY (id_proyecto) REFERENCES Proyectos(id_proyecto) ON DELETE CASCADE
 );
+

@@ -20,7 +20,13 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
     
 	@Autowired
 	private UsuarioProyectoRepository usuarioProyectoRepository;
-
+	
+	@Autowired
+	private UsuarioService usuarioService; 
+	
+	@Autowired
+	private ProyectoService proyectoService; 
+	
 	@Override
 	public List<UsuarioProyecto> buscarTodos() {
 		
@@ -155,8 +161,53 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
 
 	@Override
 	public int cambiarEstadoFavorito(boolean estado, String username, int idProyecto) {
-		
-		return usuarioProyectoRepository.cambiarEstadoFavorito(estado, username, idProyecto); 
+	    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+
+	    if (usuario == null) {
+	        return 0;
+	    }
+
+	    UsuarioProyectoId id = new UsuarioProyectoId(usuario.getIdUsuario(), idProyecto);
+	    UsuarioProyecto usuarioProyecto = usuarioProyectoRepository.findById(id).orElse(null);
+
+	    if (usuarioProyecto == null) {
+	        // Si no existe relación previa
+	        if (estado) {
+	            UsuarioProyecto nuevoFavorito = UsuarioProyecto.builder()
+	                .id(id)
+	                .usuario(usuario)
+	                .proyecto(proyectoService.buscarUno(idProyecto))
+	                .estado(EstadoAplicacion.FAVORITO)
+	                .favorito(true)
+	                .propietario(false)
+	                .build();
+	            usuarioProyectoRepository.save(nuevoFavorito);
+	            return 1;
+	        } else {
+	            // Si se quiere quitar favorito pero no existe registro, nada que hacer
+	            return 0;
+	        }
+	    }
+
+	    // Si ya existe una inscripción o participación
+	    if (estado) {
+	        usuarioProyecto.setFavorito(true);
+	        if (usuarioProyecto.getEstado() == EstadoAplicacion.PENDIENTE || usuarioProyecto.getEstado() == EstadoAplicacion.ACEPTADO || usuarioProyecto.getEstado() == EstadoAplicacion.RECHAZADO) {
+	            // Solo marcar favorito
+	        } else {
+	            usuarioProyecto.setEstado(EstadoAplicacion.FAVORITO);
+	        }
+	    } else {
+	        usuarioProyecto.setFavorito(false);
+	        if (usuarioProyecto.getEstado() == EstadoAplicacion.FAVORITO) {
+	            // Si era solo favorito, eliminar
+	            usuarioProyectoRepository.delete(usuarioProyecto);
+	            return 1;
+	        }
+	    }
+
+	    usuarioProyectoRepository.save(usuarioProyecto);
+	    return 1;
 	}
 
 }

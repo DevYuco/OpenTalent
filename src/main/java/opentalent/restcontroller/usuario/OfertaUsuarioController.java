@@ -81,7 +81,7 @@ public class OfertaUsuarioController {
             .nombreEmpresa(empresa.getNombreEmpresa())
             .fotoEmpresa(empresa.getFoto())
             .direccionEmpresa(empresa.getDireccion())
-            .estadoAplicacion(usuarioOferta != null ? usuarioOferta.getEstado().name() : "NO_APLICADO")
+            .estadoAplicacion(usuarioOferta != null ? usuarioOferta.getEstado().name() : "NO APLICADO")
             .esFavorita(usuarioOferta != null && usuarioOferta.isFavorito())
             .vacantesDisponibles(vacantesDisponibles)
             .build();
@@ -183,20 +183,36 @@ public class OfertaUsuarioController {
 
         UsuarioOfertaId id = new UsuarioOfertaId(usuario.getIdUsuario(), oferta.getIdOferta());
 
-        if (usuarioOfertaService.existeInscripcion(id)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Ya estas inscrito en esta oferta."));
+        UsuarioOferta inscripcionExistente = usuarioOfertaService.buscarUno(id);
+
+        if (inscripcionExistente != null) {
+            EstadoAplicacion estadoActual = inscripcionExistente.getEstado();
+
+            if (estadoActual == EstadoAplicacion.PENDIENTE || estadoActual == EstadoAplicacion.ACEPTADO) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Ya estas inscrito en esta oferta."));
+            }
+
+            if (estadoActual == EstadoAplicacion.RECHAZADO) {
+                // Puede volver a inscribirse: actualizar estado a PENDIENTE
+                inscripcionExistente.setFechaAplicacion(LocalDateTime.now());
+                inscripcionExistente.setEstado(EstadoAplicacion.PENDIENTE);
+                usuarioOfertaService.modificarUno(inscripcionExistente); 
+
+                return ResponseEntity.ok(Map.of("mensaje","Has vuelto a solicitar esta oferta. ¡Mucha suerte!"));
+            }
         }
 
-        UsuarioOferta inscripcion = UsuarioOferta.builder()
+        // Si no existía ninguna inscripción, crear nueva
+        UsuarioOferta nuevaInscripcion = UsuarioOferta.builder()
                 .id(id)
                 .usuario(usuario)
                 .fechaAplicacion(LocalDateTime.now())
                 .oferta(oferta)
                 .estado(EstadoAplicacion.PENDIENTE)
-                .favorito(true) // o false si lo prefieres
+                .favorito(true)
                 .build();
 
-        usuarioOfertaService.insertUno(inscripcion);
+        usuarioOfertaService.insertUno(nuevaInscripcion);
 
         return ResponseEntity.ok(Map.of("mensaje","Inscripción a la oferta realizada correctamente."));
     }

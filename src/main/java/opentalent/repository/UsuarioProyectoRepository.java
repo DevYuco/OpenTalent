@@ -65,4 +65,7 @@ public interface UsuarioProyectoRepository extends JpaRepository<UsuarioProyecto
 	@Transactional
 	@Query("UPDATE UsuarioProyecto u SET u.favorito = ?1 WHERE u.usuario.username = ?2 AND u.proyecto.idProyecto = ?3 ")
 	int cambiarEstadoFavorito(boolean estado, String username, int idProyecto);
+	
+	@Query("SELECT up.usuario FROM UsuarioProyecto up WHERE up.proyecto.id = ?1 AND up.propietario = true")
+	Usuario findPropietarioByProyecto( int idProyecto);
 }

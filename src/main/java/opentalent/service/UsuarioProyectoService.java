@@ -26,4 +26,5 @@ public interface UsuarioProyectoService extends IGenericoCRUD<UsuarioProyecto, U
 	int contarInscritosPorProyecto(int idProyecto);
 	UsuarioProyecto findByUsernameAndIdProyecto(String username, int idProyecto);
 	List<UsuarioVistaDetalleProyectoDto> findUsuariosAceptadosByProyecto(int idProyecto);
+	Usuario findPropietarioByProyecto( int idProyecto);
 }

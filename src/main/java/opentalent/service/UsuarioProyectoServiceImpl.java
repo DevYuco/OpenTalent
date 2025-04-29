@@ -210,4 +210,10 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
 	    return 1;
 	}
 
+	@Override
+	public Usuario findPropietarioByProyecto(int idProyecto) {
+		
+		return usuarioProyectoRepository.findPropietarioByProyecto(idProyecto);
+	}
+
 }

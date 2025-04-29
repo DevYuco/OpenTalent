@@ -84,10 +84,10 @@ public class ProyectoUsuarioControler {
     public ResponseEntity<ProyectoDetallesVistaDto> detallesProyecto(@PathVariable int id) {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
     	Proyecto proyecto = proyectoService.buscarUno(id); 
-    	Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+    	Usuario usuarioPropietario = usuarioProyectoService.findPropietarioByProyecto(id); 
     	UsuarioProyecto usuarioProyecto = usuarioProyectoService.findByUsernameAndIdProyecto(username, id); 
     	
-    	if(proyecto == null || usuario == null) {
+    	if(proyecto == null) {
     		return ResponseEntity.notFound().build();
     	}
 
@@ -99,9 +99,9 @@ public class ProyectoUsuarioControler {
         ProyectoDetallesVistaDto dto = ProyectoDetallesVistaDto.builder()
             .idProyecto(proyecto.getIdProyecto())
         	//propietario
-        	.nombreUsuario(usuario.getNombre())
-            .apellidos(usuario.getApellidos())
-            .fotoUsuario(usuario.getFotoPerfil())
+        	.nombreUsuario(usuarioPropietario.getNombre())
+            .apellidos(usuarioPropietario.getApellidos())
+            .fotoUsuario(usuarioPropietario.getFotoPerfil())
             //Proyecto
             .fechaInicio(proyecto.getFechaInicio())
             .titulo(proyecto.getNombre())

@@ -11,5 +11,4 @@ public interface UsuarioService extends IGenericoCRUD<Usuario, Integer>, UserDet
 	UsuarioDto findByUsername(String username);
 	boolean existsByUsername(String username);
 	Usuario buscarPorUsernameEntidad(String username); 
-	
 }

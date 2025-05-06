@@ -52,26 +52,28 @@ public class ProyectoUsuarioControler {
     @Autowired
     private ModelMapper modelMapper;
     
-    @Operation(summary = "Listar proyectos activos", description = "Devuelve todos los proyectos disponibles y activos")
+    @Operation(summary = "Listar proyectos activos", description = "Devuelve todos los proyectos activos disponibles que no son del usuario autenticado")
     @GetMapping("/")
     public ResponseEntity<List<ProyectosVistaDto>> todosProyectos() {
-    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	
-    	List<Proyecto> proyectos = proyectoService.buscarTodosActivos(); 
-    	
-    	List<ProyectosVistaDto> proyectosDto = proyectos.stream()
-    			.map(p -> {
-    				ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class); 
-    				boolean favorito = usuarioProyectoService.esFavorita(username, p.getIdProyecto()); 
-    				dto.setEsFavorito(favorito);
-    				int aceptados = usuarioProyectoService.contarInscritosPorProyecto(p.getIdProyecto()); 
-    				int plazas = p.getPlazas() - aceptados; 
-    				dto.setPlazasDisponibles(plazas); 
-    				return dto; 
-    			})
-				.toList(); 
-    	
-    	return ResponseEntity.ok(proyectosDto);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<Proyecto> proyectos = proyectoService.buscarTodosActivos();
+
+        List<ProyectosVistaDto> proyectosDto = proyectos.stream()
+            //  Excluir los proyectos donde el usuario es propietario
+            .filter(p -> !usuarioProyectoService.esPropietarioDelProyecto(username, p.getIdProyecto()))
+            .map(p -> {
+                ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class);
+                boolean favorito = usuarioProyectoService.esFavorita(username, p.getIdProyecto());
+                dto.setEsFavorito(favorito);
+                int aceptados = usuarioProyectoService.contarInscritosPorProyecto(p.getIdProyecto());
+                int plazas = p.getPlazas() - aceptados;
+                dto.setPlazasDisponibles(plazas);
+                return dto;
+            })
+            .toList();
+
+        return ResponseEntity.ok(proyectosDto);
     }
 
     @Operation(

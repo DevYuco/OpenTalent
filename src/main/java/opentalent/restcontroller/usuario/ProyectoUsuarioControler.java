@@ -121,24 +121,24 @@ public class ProyectoUsuarioControler {
         return ResponseEntity.ok(dto);
     }
 
-    @Operation(summary = "Proyectos favoritos", description = "Obtiene los proyectos activos marcados como favoritos por el usuario")
+    @Operation(summary = "Proyectos favoritos", description = "Obtiene los proyectos activos marcados como favoritos por el usuario, excluyendo aquellos en los que es propietario")
     @GetMapping("/favoritos")
     public ResponseEntity<List<ProyectosVistaDto>> proyectosFavoritosActivosPorUsername() {
-    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	List<Proyecto> proyectos = usuarioProyectoService.buscarProyectosFavsActivosPorUsername(username);
-    	List<ProyectosVistaDto> proyectosDto = proyectos.stream()
-    			.map(p -> {
-    				ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class); 
-    				boolean favorito = usuarioProyectoService.esFavorita(username, p.getIdProyecto()); 
-    				dto.setEsFavorito(favorito);
-    				int aceptados = usuarioProyectoService.contarInscritosPorProyecto(p.getIdProyecto()); 
-    				int plazas = p.getPlazas() - aceptados; 
-    				dto.setPlazasDisponibles(plazas); 
-    				return dto; 
-    			})
-				.toList(); 
-    	
-    	return ResponseEntity.ok(proyectosDto);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Proyecto> proyectos = usuarioProyectoService.buscarProyectosFavsActivosPorUsername(username);
+
+        List<ProyectosVistaDto> proyectosDto = proyectos.stream()
+            .filter(p -> !usuarioProyectoService.esPropietarioDelProyecto(username, p.getIdProyecto()))
+            .map(p -> {
+                ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class);
+                dto.setEsFavorito(true); // Ya sabemos que todos son favoritos aquí
+                int aceptados = usuarioProyectoService.contarInscritosPorProyecto(p.getIdProyecto());
+                dto.setPlazasDisponibles(p.getPlazas() - aceptados);
+                return dto;
+            })
+            .toList();
+
+        return ResponseEntity.ok(proyectosDto);
     }
 
 
@@ -351,21 +351,29 @@ public class ProyectoUsuarioControler {
         }
 
         UsuarioProyectoId id = new UsuarioProyectoId(usuario.getIdUsuario(), proyecto.getIdProyecto());
+        UsuarioProyecto existente = usuarioProyectoService.buscarUno(id);
 
-        if (usuarioProyectoService.buscarUno(id) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Ya has solicitado participar en este proyecto."));
+        // Si ya existe solicitud y su estado no es RECHAZADO → conflicto
+        if (existente != null && existente.getEstado().equals(EstadoAplicacion.ACEPTADO)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("mensaje", "Ya has solicitado participar en este proyecto."));
         }
+        if(existente != null && (existente.getEstado().equals(EstadoAplicacion.RECHAZADO) || existente.getEstado().equals(EstadoAplicacion.FAVORITO))) {
+        	if(!existente.isFavorito()) existente.setFavorito(true);
+        	existente.setEstado(EstadoAplicacion.PENDIENTE);
+        	usuarioProyectoService.modificarUno(existente); 
+        } else {
+        	UsuarioProyecto solicitud = UsuarioProyecto.builder()
+                    .id(id)
+                    .usuario(usuario)
+                    .proyecto(proyecto)
+                    .estado(EstadoAplicacion.PENDIENTE)
+                    .favorito(true) // marcar como favorito por defecto
+                    .build();
 
-        UsuarioProyecto solicitud = UsuarioProyecto.builder()
-                .id(id)
-                .usuario(usuario)
-                .proyecto(proyecto)
-                .estado(EstadoAplicacion.PENDIENTE)
-                .favorito(true) // marcar como favorito por defecto
-                .build();
-
-        usuarioProyectoService.insertUno(solicitud);
-
+            usuarioProyectoService.insertUno(solicitud);
+        }
+       
         return ResponseEntity.ok(Map.of("mensaje","Solicitud enviada correctamente al proyecto."));
     }
     

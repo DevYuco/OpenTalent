@@ -192,16 +192,17 @@ public class OfertaUsuarioController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Ya estas inscrito en esta oferta."));
             }
 
-            if (estadoActual == EstadoAplicacion.RECHAZADO) {
+            if (estadoActual == EstadoAplicacion.RECHAZADO || estadoActual == EstadoAplicacion.FAVORITO) {
                 // Puede volver a inscribirse: actualizar estado a PENDIENTE
                 inscripcionExistente.setFechaAplicacion(LocalDateTime.now());
                 inscripcionExistente.setEstado(EstadoAplicacion.PENDIENTE);
+                if(!inscripcionExistente.isFavorito()) inscripcionExistente.setFavorito(true);
                 usuarioOfertaService.modificarUno(inscripcionExistente); 
 
                 return ResponseEntity.ok(Map.of("mensaje","Has vuelto a solicitar esta oferta. ¡Mucha suerte!"));
             }
         }
-
+        
         // Si no existía ninguna inscripción, crear nueva
         UsuarioOferta nuevaInscripcion = UsuarioOferta.builder()
                 .id(id)

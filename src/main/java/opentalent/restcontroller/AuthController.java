@@ -37,7 +37,7 @@ import opentalent.service.UsuarioService;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*")
-@Tag(name = "1 - Auth", description = "Endpoints para hacer login y registro")
+@Tag(name = "01 - Auth", description = "Endpoints para hacer login y registro")
 public class AuthController {
 	
     @Autowired

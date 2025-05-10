@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -49,6 +52,8 @@ import opentalent.dto.ResennaAdminDto;
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
 
+@Tag(name = "13 - Admin - Sectores", description = "Endpoints para gestionar los sectores profesionales desde el panel del administrador")
+
 public class AdminSectorController {
 	
 	@Autowired
@@ -75,6 +80,11 @@ public class AdminSectorController {
 	
 	//----SECTORES-------
 	
+	
+	@Operation(
+		    summary = "Listar todos los sectores",
+		    description = "Recupera todos los sectores registrados en el sistema. Visible solo para administradores."
+		)
 		@GetMapping("/sectores")
 		public ResponseEntity<?> obtenerTodosSectores() {
 
@@ -90,6 +100,10 @@ public class AdminSectorController {
 		    return ResponseEntity.ok(sectores);
 		}
 		
+	@Operation(
+		    summary = "Eliminar un sector",
+		    description = "Elimina un sector existente del sistema a partir de su ID."
+		)
 		@DeleteMapping("/sectores/{id}")
 		public ResponseEntity<?> eliminarSector(@PathVariable int id) {
 
@@ -108,7 +122,10 @@ public class AdminSectorController {
 		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
 		    }
 		}
-		
+	@Operation(
+		    summary = "Añadir un nuevo sector",
+		    description = "Registra un nuevo sector en la plataforma, siempre que no exista previamente con el mismo nombre."
+		)
 		@PostMapping("/sectores")
 		public ResponseEntity<?> anadirSector(@RequestBody Sector nuevoSector) {
 

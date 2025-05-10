@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -48,6 +51,8 @@ import opentalent.dto.ResennaAdminDto;
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
+@Tag(name = "14 - Admin - Usuarios", description = "Endpoints para gestionar usuarios desde el panel del administrador")
+
 public class AdminUsuarioController {
 	
 	@Autowired
@@ -73,7 +78,10 @@ public class AdminUsuarioController {
 	
 	
 	//---Usuarios ----
-	
+	@Operation(
+		    summary = "Listar todos los usuarios",
+		    description = "Recupera todos los usuarios registrados en la plataforma, incluyendo su estado, rol y empresa asociada. Visible solo para administradores."
+		)
 	@GetMapping("/usuarios")
 	public ResponseEntity<?> obtenerTodosUsuarios() {
 
@@ -106,7 +114,10 @@ public class AdminUsuarioController {
 	}
 
 
-	
+	@Operation(
+		    summary = "Eliminar usuario",
+		    description = "Elimina un usuario específico por su ID. Solo los administradores tienen permiso para esta acción."
+		)
 	@DeleteMapping("/usuarios/{id}")
 	public ResponseEntity<?> eliminarUsuario(@PathVariable int id) {
 
@@ -126,7 +137,10 @@ public class AdminUsuarioController {
 	    }
 	}
 
-	
+	@Operation(
+		    summary = "Cambiar estado de un usuario",
+		    description = "Permite activar o desactivar la cuenta de un usuario alternando su estado. Acción exclusiva del administrador."
+		)
 	@PutMapping("/usuarios/{id}/estado")
 	public ResponseEntity<?> cambiarEstadoUsurio(@PathVariable int id) {
 

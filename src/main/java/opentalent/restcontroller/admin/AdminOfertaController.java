@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -47,6 +50,7 @@ import opentalent.dto.ResennaAdminDto;
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
+@Tag(name = "05 - Admin - Ofertas", description = "Endpoints para la gestión de ofertas desde el perfil administrador")
 public class AdminOfertaController {
 	
 	
@@ -75,6 +79,11 @@ public class AdminOfertaController {
 		//---Ofertas----
 		
 		// Obtener todas las ofertas
+		@Operation(
+			    summary = "Obtener todas las ofertas",
+			    description = "Recupera una lista con todas las ofertas disponibles en la plataforma, visible para administradores."
+			)
+
 		@GetMapping("/ofertas")
 		public ResponseEntity<?> obtenerTodasOfertas() {
 
@@ -110,79 +119,86 @@ public class AdminOfertaController {
 
 
 		// Eliminar una oferta por ID
-		@DeleteMapping("/ofertas/{id}")
-		public ResponseEntity<?> eliminarOferta(@PathVariable int id) {
+		@Operation(
+		        summary = "Eliminar una oferta",
+		        description = "Permite al administrador eliminar una oferta específica por su ID."
+		    )
+		    @DeleteMapping("/ofertas/{id}")
+		    public ResponseEntity<?> eliminarOferta(@PathVariable int id) {
+		        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		        String username = auth.getName();
 
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String username = auth.getName();
-
-		    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-		    if (usuario == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
-		    }
-
-		    if (ofertaService.buscarUno(id) != null) {
-		        ofertaService.elimnarUno(id);
-		        return ResponseEntity.ok("Oferta eliminada correctamente.");
-		    }
-
-		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada.");
-		}
-
-
-		// Cambiar el estado de una oferta (ACTIVA, CERRADA, PENDIENTE)
-		@PutMapping("/ofertas/{id}/estado")
-		public ResponseEntity<?> cambiarEstadoOferta(@PathVariable int id, @RequestParam String estado) {
-
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String username = auth.getName();
-
-		    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-		    if (usuario == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
-		    }
-
-		    Oferta oferta = ofertaService.buscarUno(id);
-		    if (oferta != null) {
-		        try {
-		            oferta.setEstado(EstadoOferta.valueOf(estado.toUpperCase()));
-		            ofertaService.modificarUno(oferta);
-		            return ResponseEntity.ok("Estado de oferta actualizado correctamente.");
-		        } catch (IllegalArgumentException e) {
-		            return ResponseEntity.badRequest().body("Estado no válido. Usa: ACTIVA, CERRADA, PENDIENTE.");
+		        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+		        if (usuario == null) {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
 		        }
-		    }
 
-		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada.");
-		}
-
-
-		// Modificar el sector de una oferta
-		@PutMapping("/ofertas/{id}/sector")
-		public ResponseEntity<?> cambiarSectorOferta(@PathVariable int id, @RequestParam String nombreSector) {
-
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String username = auth.getName();
-
-		    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-		    if (usuario == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
-		    }
-
-		    Oferta oferta = ofertaService.buscarUno(id);
-		    if (oferta != null) {
-		        Sector sector = sectorService.findByName(nombreSector);
-		        if (sector != null) {
-		            oferta.setSector(sector);
-		            ofertaService.modificarUno(oferta);
-		            return ResponseEntity.ok("Sector de oferta actualizado correctamente.");
-		        } else {
-		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
+		        if (ofertaService.buscarUno(id) != null) {
+		            ofertaService.elimnarUno(id);
+		            return ResponseEntity.ok("Oferta eliminada correctamente.");
 		        }
+
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada.");
 		    }
 
-		    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada.");
-		}
+		    // Cambiar el estado de una oferta (ACTIVA, CERRADA, PENDIENTE)
+		    @Operation(
+		        summary = "Cambiar el estado de una oferta",
+		        description = "Actualiza el estado de una oferta específica (ACTIVA, CERRADA, PENDIENTE) por su ID."
+		    )
+		    @PutMapping("/ofertas/{id}/estado")
+		    public ResponseEntity<?> cambiarEstadoOferta(@PathVariable int id, @RequestParam String estado) {
+		        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		        String username = auth.getName();
+
+		        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+		        if (usuario == null) {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+		        }
+
+		        Oferta oferta = ofertaService.buscarUno(id);
+		        if (oferta != null) {
+		            try {
+		                oferta.setEstado(EstadoOferta.valueOf(estado.toUpperCase()));
+		                ofertaService.modificarUno(oferta);
+		                return ResponseEntity.ok("Estado de oferta actualizado correctamente.");
+		            } catch (IllegalArgumentException e) {
+		                return ResponseEntity.badRequest().body("Estado no válido. Usa: ACTIVA, CERRADA, PENDIENTE.");
+		            }
+		        }
+
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada.");
+		    }
+
+		    // Modificar el sector de una oferta
+		    @Operation(
+		        summary = "Modificar el sector de una oferta",
+		        description = "Permite actualizar el sector asociado a una oferta mediante su nombre y el ID de la oferta."
+		    )
+		    @PutMapping("/ofertas/{id}/sector")
+		    public ResponseEntity<?> cambiarSectorOferta(@PathVariable int id, @RequestParam String nombreSector) {
+		        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		        String username = auth.getName();
+
+		        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+		        if (usuario == null) {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+		        }
+
+		        Oferta oferta = ofertaService.buscarUno(id);
+		        if (oferta != null) {
+		            Sector sector = sectorService.findByName(nombreSector);
+		            if (sector != null) {
+		                oferta.setSector(sector);
+		                ofertaService.modificarUno(oferta);
+		                return ResponseEntity.ok("Sector de oferta actualizado correctamente.");
+		            } else {
+		                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
+		            }
+		        }
+
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta no encontrada.");
+		    }
 
 		
 

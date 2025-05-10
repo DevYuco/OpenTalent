@@ -3,8 +3,6 @@ package opentalent.restcontroller.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.web.bind.annotation.RequestBody;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import opentalent.dto.UsuarioAdminDto;
 import opentalent.entidades.Direccion;
@@ -44,97 +44,102 @@ import opentalent.dto.ProyectoAdminDto;
 import opentalent.dto.RegistroEmpresaAdminDto;
 import opentalent.dto.ResennaAdminDto;
 
-
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
-
+@Tag(name = "04 - Admin - Sectores", description = "Endpoints para la gestión de sectores desde el perfil administrador")
 public class AdminSectorController {
-	
-	@Autowired
-	private UsuarioService usuarioService;
-	
-	@Autowired
-	private ProyectoService proyectoService;
-	
-	@Autowired
-	private ResennaService resennaService;
-	
-	@Autowired 
-	private OfertaService ofertaService;
-	
-	@Autowired
-	private EmpresaService empresaService;
-	
-	@Autowired
-	private SectorService sectorService;
-	
-	@Autowired
-	private DireccionService direccionService;
-	
-	
-	//----SECTORES-------
-	
-		@GetMapping("/sectores")
-		public ResponseEntity<?> obtenerTodosSectores() {
 
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String username = auth.getName();
+    @Autowired
+    private UsuarioService usuarioService;
 
-		    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-		    if (usuario == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
-		    }
+    @Autowired
+    private ProyectoService proyectoService;
 
-		    List<Sector> sectores = sectorService.buscarTodos();
-		    return ResponseEntity.ok(sectores);
-		}
-		
-		@DeleteMapping("/sectores/{id}")
-		public ResponseEntity<?> eliminarSector(@PathVariable int id) {
+    @Autowired
+    private ResennaService resennaService;
 
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String username = auth.getName();
+    @Autowired 
+    private OfertaService ofertaService;
 
-		    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-		    if (usuario == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
-		    }
+    @Autowired
+    private EmpresaService empresaService;
 
-		    int resultado = sectorService.elimnarUno(id);
-		    if (resultado == 1) {
-		        return ResponseEntity.ok("Sector eliminado correctamente.");
-		    } else {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
-		    }
-		}
-		
-		@PostMapping("/sectores")
-		public ResponseEntity<?> anadirSector(@RequestBody Sector nuevoSector) {
+    @Autowired
+    private SectorService sectorService;
 
-		    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		    String username = auth.getName();
+    @Autowired
+    private DireccionService direccionService;
 
-		    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-		    if (usuario == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
-		    }
+    // Obtener todos los sectores
+    @Operation(
+        summary = "Obtener todos los sectores",
+        description = "Recupera todos los sectores registrados en el sistema. Visible solo para administradores."
+    )
+    @GetMapping("/sectores")
+    public ResponseEntity<?> obtenerTodosSectores() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
 
-		    // 🐞 Debug: Verificar qué llega en el body
-		    System.out.println(">> Sector recibido: " + nuevoSector);
-		    System.out.println(">> Nombre: " + nuevoSector.getNombre());
+        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+        }
 
-		    if (sectorService.findByName(nuevoSector.getNombre()) != null) {
-		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ya existe un sector con ese nombre.");
-		    }
+        List<Sector> sectores = sectorService.buscarTodos();
+        return ResponseEntity.ok(sectores);
+    }
 
-		    Sector creado = sectorService.insertUno(nuevoSector);
-		    if (creado != null) {
-		        return ResponseEntity.status(HttpStatus.CREATED).body("Sector añadido correctamente.");
-		    } else {
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el sector.");
-		    }
-		}
+    // Eliminar un sector por ID
+    @Operation(
+        summary = "Eliminar un sector",
+        description = "Elimina un sector existente del sistema a partir de su ID."
+    )
+    @DeleteMapping("/sectores/{id}")
+    public ResponseEntity<?> eliminarSector(@PathVariable int id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
 
+        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+        }
 
+        int resultado = sectorService.elimnarUno(id);
+        if (resultado == 1) {
+            return ResponseEntity.ok("Sector eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
+        }
+    }
+
+    // Añadir un nuevo sector
+    @Operation(
+        summary = "Añadir un nuevo sector",
+        description = "Registra un nuevo sector en la plataforma, siempre que no exista previamente con el mismo nombre."
+    )
+    @PostMapping("/sectores")
+    public ResponseEntity<?> anadirSector(@RequestBody Sector nuevoSector) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+        }
+
+        System.out.println(">> Sector recibido: " + nuevoSector);
+        System.out.println(">> Nombre: " + nuevoSector.getNombre());
+
+        if (sectorService.findByName(nuevoSector.getNombre()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ya existe un sector con ese nombre.");
+        }
+
+        Sector creado = sectorService.insertUno(nuevoSector);
+        if (creado != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Sector añadido correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el sector.");
+        }
+    }
 }

@@ -37,7 +37,7 @@ import opentalent.service.UsuarioService;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*")
-@Tag(name = "1 - Auth", description = "Endpoints para hacer login y registro")
+@Tag(name = "01 - Auth", description = "Endpoints para hacer login y registro")
 public class AuthController {
 	
     @Autowired
@@ -57,6 +57,11 @@ public class AuthController {
 	
 	@Autowired
 	private EmpresaService empresaService; 
+	
+	@Operation(
+		    summary = "Iniciar sesión",
+		    description = "Permite a un usuario autenticarse mediante username y contraseña. Devuelve un accessToken, refreshToken y los datos del usuario."
+		)
 	
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -82,6 +87,11 @@ public class AuthController {
 
         return ResponseEntity.status(401).body(Map.of("mensaje","Invalid username or password"));
     }
+	
+	@Operation(
+		    summary = "Refrescar token de acceso",
+		    description = "Genera un nuevo accessToken válido a partir de un refreshToken válido previamente emitido."
+		)
  
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {

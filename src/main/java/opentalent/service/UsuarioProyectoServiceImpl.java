@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import opentalent.dto.ProyectosVistaDto;
 import opentalent.dto.UsuarioVistaDetalleProyectoDto;
 import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Proyecto;
@@ -101,9 +102,18 @@ public class UsuarioProyectoServiceImpl implements UsuarioProyectoService {
 	}
 
 	@Override
-	public List<Proyecto> buscarProyectosPropietarioYActivo(String username) {
-		
-		return usuarioProyectoRepository.buscarProyectosPropietarioYActivo(username);
+	public List<ProyectosVistaDto> buscarProyectosPropietarioYActivo(String username) {
+	    List<Proyecto> proyectos = usuarioProyectoRepository.buscarProyectosPropietarioYActivo(username);
+
+	    return proyectos.stream()
+	        .map(p -> {
+	            ProyectosVistaDto dto = modelMapper.map(p, ProyectosVistaDto.class);
+	            int aceptados = contarInscritosPorProyecto(p.getIdProyecto());
+	            dto.setPlazasDisponibles(p.getPlazas() - aceptados);
+	            dto.setEsFavorito(true); // Si es propietario, puedes asumir que es favorito o ajustarlo según lógica
+	            return dto;
+	        })
+	        .toList();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package opentalent.service;
 
 import java.util.List;
 
+import opentalent.dto.ProyectosVistaDto;
 import opentalent.dto.UsuarioVistaDetalleProyectoDto;
 import opentalent.entidades.EstadoAplicacion;
 import opentalent.entidades.Proyecto;
@@ -17,7 +18,7 @@ public interface UsuarioProyectoService extends IGenericoCRUD<UsuarioProyecto, U
 	Boolean comprobarFavorito(String username, int idProyecto); 
 	int cambiarEstadoFavorito(boolean estado, String username, int idProyecto); 
 	List<Proyecto> buscarProyectosFavsActivosPorUsername(String username);
-	List<Proyecto> buscarProyectosPropietarioYActivo(String username);
+	List<ProyectosVistaDto> buscarProyectosPropietarioYActivo(String username);
 	List<Usuario> postulantesPendientes(int idProyecto); 
 	int modificarEstadoProyecto(EstadoAplicacion estado, int idUsuario, int idProyecto);
 	boolean esPropietarioDelProyecto(String username, int idProyecto);

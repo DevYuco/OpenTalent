@@ -103,14 +103,14 @@ public class AdminEmpresaController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar la dirección.");
 	    }
 
-	    // 💬 Depuración: imprimir nombre recibido para buscar sector
+	    // Depuración: imprimir nombre recibido para buscar sector
 	    System.out.println("==> Nombre de sector recibido en DTO: [" + dto.getNombreSector() + "]");
 
 	    // Buscar sector
 	    Sector sector = sectorService.findByName(dto.getNombreSector());
 
 
-	    // 💬 Depuración: resultado de búsqueda de sector
+	    // Depuración: resultado de búsqueda de sector
 	    System.out.println("==> Resultado de buscarPorNombre: " + (sector != null ? sector.getNombre() : "null"));
 
 	    if (sector == null) {

@@ -145,9 +145,9 @@ public class ProyectoUsuarioControler {
 
     @Operation(summary = "Mis proyectos activos", description = "Devuelve los proyectos activos donde el usuario es propietario")
     @GetMapping("/mis-proyectos")
-    public ResponseEntity<List<Proyecto>> buscarProyectosPropietarioYActivos() {
+    public ResponseEntity<List<ProyectosVistaDto>> buscarProyectosPropietarioYActivos() {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    	return ResponseEntity.ok(usuarioProyectoService.buscarProyectosPropietarioYActivo(username));
+        return ResponseEntity.ok(usuarioProyectoService.buscarProyectosPropietarioYActivo(username));
     }
     
     @Operation(
@@ -213,7 +213,6 @@ public class ProyectoUsuarioControler {
 
         // Seguridad: comprobar que el usuario autenticado es el propietario del proyecto
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println();
         if (!usuarioProyectoService.esPropietarioDelProyecto(username, dto.getIdProyecto())) {
             return ResponseEntity.status(403).body(0); // No autorizado
         }

@@ -92,7 +92,7 @@ public class EmpresaUsuarioController {
     }
 	
     @Operation(summary = "Añadir reseña a empresa", description = "Permite a un usuario publicar una reseña hacia una empresa con valoración y comentario")
-    @PostMapping("/reseñas")
+    @PostMapping("/resenas")
     public ResponseEntity<Boolean> añadirReseña(@RequestBody ResennaDto resennaDto) {
     	String username = SecurityContextHolder.getContext().getAuthentication().getName();
     	Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);

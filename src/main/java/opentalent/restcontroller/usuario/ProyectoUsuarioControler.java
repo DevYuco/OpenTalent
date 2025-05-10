@@ -214,7 +214,8 @@ public class ProyectoUsuarioControler {
         // Seguridad: comprobar que el usuario autenticado es el propietario del proyecto
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!usuarioProyectoService.esPropietarioDelProyecto(username, dto.getIdProyecto())) {
-            return ResponseEntity.status(403).body(0); // No autorizado
+        
+        	return ResponseEntity.status(403).body(0); // No autorizado
         }
 
         // Si se acepta la solicitud, marcar como favorito

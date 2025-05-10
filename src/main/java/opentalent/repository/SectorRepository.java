@@ -9,9 +9,8 @@ import org.springframework.data.repository.query.Param;
 import opentalent.entidades.Sector;
 
 public interface SectorRepository extends JpaRepository<Sector, Integer>{
-	@Query("SELECT s FROM Sector s WHERE LOWER(TRIM(s.nombre)) = LOWER(TRIM(:nombre))")
-	Optional<Sector> buscarPorNombreFlexible(@Param("nombre") String nombre);
-
+	@Query("SELECT s FROM Sector s WHERE s.nombre = ?1")
+	Sector findByName(String nombre);
 
 
 

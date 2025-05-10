@@ -107,7 +107,7 @@ public class AdminEmpresaController {
 	    System.out.println("==> Nombre de sector recibido en DTO: [" + dto.getNombreSector() + "]");
 
 	    // Buscar sector
-	    Sector sector = sectorService.buscarPorNombre(dto.getNombreSector());
+	    Sector sector = sectorService.findByName(dto.getNombreSector());
 
 
 	    // 💬 Depuración: resultado de búsqueda de sector

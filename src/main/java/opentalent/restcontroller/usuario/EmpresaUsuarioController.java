@@ -36,6 +36,7 @@ import opentalent.service.UsuarioService;
 @RestController
 @RequestMapping("/usuario/empresas")
 @CrossOrigin(origins = "*")
+
 @Tag(name = "6 - Usuario - Empresas", description = "Endpoints para visualizar empresas desde el perfil usuario")
 public class EmpresaUsuarioController {
 

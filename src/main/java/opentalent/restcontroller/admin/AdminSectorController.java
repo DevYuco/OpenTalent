@@ -124,7 +124,7 @@ public class AdminSectorController {
 		    System.out.println(">> Sector recibido: " + nuevoSector);
 		    System.out.println(">> Nombre: " + nuevoSector.getNombre());
 
-		    if (sectorService.buscarPorNombre(nuevoSector.getNombre()) != null) {
+		    if (sectorService.findByName(nuevoSector.getNombre()) != null) {
 		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ya existe un sector con ese nombre.");
 		    }
 

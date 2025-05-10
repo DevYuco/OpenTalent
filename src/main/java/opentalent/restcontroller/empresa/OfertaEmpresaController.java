@@ -118,9 +118,9 @@ public class OfertaEmpresaController {
 	    Empresa empresa = usuario.getEmpresa();
 
 	 // Obtener sector por ID (validar que exista)
-	    Sector sector = sectorService.buscarPorNombre(dto.getNombreSector());
+	    Sector sector = sectorService.findByName(dto.getNombreSector());
 	    if (sector == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("Mensaje", "Sector no encontrado"));
 	    }
 
 	    // Crear la nueva oferta
@@ -177,9 +177,9 @@ public class OfertaEmpresaController {
 	    }
 
 	 // 5. Obtener sector
-	    Sector sector = sectorService.buscarPorNombre(dto.getNombreSector());
+	    Sector sector = sectorService.findByName(dto.getNombreSector());
 	    if (sector == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado");
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("Mensaje","Sector no encontrado"));
 	    }
 
 	    oferta.setTitulo(dto.getTitulo());

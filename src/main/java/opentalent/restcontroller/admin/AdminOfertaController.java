@@ -171,7 +171,7 @@ public class AdminOfertaController {
 
 		    Oferta oferta = ofertaService.buscarUno(id);
 		    if (oferta != null) {
-		        Sector sector = sectorService.buscarPorNombre(nombreSector);
+		        Sector sector = sectorService.findByName(nombreSector);
 		        if (sector != null) {
 		            oferta.setSector(sector);
 		            ofertaService.modificarUno(oferta);

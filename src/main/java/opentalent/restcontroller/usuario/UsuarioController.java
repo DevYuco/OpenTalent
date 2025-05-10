@@ -17,7 +17,7 @@ import opentalent.service.UsuarioService;
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin(origins = "*")
-@Tag(name = "5 - Usuario - Perfil", description = "Endpoints para gestionar datos del usuario")
+@Tag(name = "05 - Usuario - Perfil", description = "Endpoints para gestionar datos del usuario")
 public class UsuarioController {
 	
 	@Autowired

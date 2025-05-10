@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -48,6 +51,9 @@ import opentalent.dto.ResennaAdminDto;
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
+
+@Tag(name = "11 - Admin - Proyectos", description = "Endpoints para gestionar proyectos desde el panel del administrador")
+
 public class AdminProyectoController {
 	
 	
@@ -75,6 +81,10 @@ public class AdminProyectoController {
 		
 		//----Proyectos----
 		
+		@Operation(
+			    summary = "Listar todos los proyectos",
+			    description = "Recupera una lista de todos los proyectos registrados en la plataforma. Solo accesible por administradores."
+			)
 		@GetMapping("/proyectos")
 		public ResponseEntity<?> obtenerTodosProyectos() {
 
@@ -106,7 +116,10 @@ public class AdminProyectoController {
 		    return ResponseEntity.ok(listaDto);
 		}
 
-		
+		@Operation(
+			    summary = "Eliminar proyecto",
+			    description = "Elimina un proyecto existente a partir de su ID. Solo visible para administradores."
+			)
 		@DeleteMapping("/proyectos/{id}")
 		public ResponseEntity<?> eliminarProyecto(@PathVariable int id) {
 
@@ -128,7 +141,10 @@ public class AdminProyectoController {
 		}
 
 		
-		
+		@Operation(
+			    summary = "Cambiar estado de un proyecto",
+			    description = "Permite activar o desactivar un proyecto alternando su estado actual. Únicamente para administradores."
+			)
 		@PutMapping("/proyectos/{id}/estado")
 		public ResponseEntity<?> cambiarEstadoProyecto(@PathVariable int id) {
 

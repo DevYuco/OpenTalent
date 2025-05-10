@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -49,6 +52,8 @@ import opentalent.dto.ResennaAdminDto;
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
 
+@Tag(name = "12 - Admin - Reseñas", description = "Endpoints para gestionar reseñas de proyectos desde el panel del administrador")
+
 public class AdminResennaController {
 	
 	
@@ -77,6 +82,10 @@ public class AdminResennaController {
 		//----Reseñass-----
 		
 		// Ver todas las reseñas
+		@Operation(
+			    summary = "Listar todas las reseñas",
+			    description = "Devuelve una lista con todas las reseñas de proyectos registradas en la plataforma. Accesible solo por administradores."
+			)
 		@GetMapping("/resennas")
 		public ResponseEntity<?> obtenerTodasResennas() {
 
@@ -109,6 +118,10 @@ public class AdminResennaController {
 
 
 		// Eliminar una reseña
+		@Operation(
+			    summary = "Eliminar una reseña",
+			    description = "Elimina una reseña específica a partir de su ID. Solo puede hacerlo un administrador."
+			)
 		@DeleteMapping("/resennas/{id}")
 		public ResponseEntity<?> eliminarResenna(@PathVariable int id) {
 

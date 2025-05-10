@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -48,6 +51,9 @@ import opentalent.dto.ResennaAdminDto;
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
+
+@Tag(name = "09 - Admin - Empresas", description = "Endpoints para registrar y gestionar empresas desde el panel de administración")
+
 public class AdminEmpresaController {
 	
 	@Autowired
@@ -73,7 +79,10 @@ public class AdminEmpresaController {
 	
 	
 
-	
+	@Operation(
+		    summary = "Registrar nueva empresa",
+		    description = "Permite al administrador registrar manualmente una nueva empresa, asociándola a un sector existente y guardando su dirección."
+		)
 	@PostMapping("/empresas")
 	public ResponseEntity<?> registrarEmpresa(@RequestBody RegistroEmpresaAdminDto dto) {
 

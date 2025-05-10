@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import opentalent.dto.UsuarioAdminDto;
@@ -47,6 +50,9 @@ import opentalent.dto.ResennaAdminDto;
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
+
+@Tag(name = "10 - Admin - Ofertas", description = "Endpoints para gestionar ofertas desde el panel del administrador")
+
 public class AdminOfertaController {
 	
 	
@@ -75,6 +81,10 @@ public class AdminOfertaController {
 		//---Ofertas----
 		
 		// Obtener todas las ofertas
+		@Operation(
+			    summary = "Listar todas las ofertas",
+			    description = "Devuelve una lista con todas las ofertas disponibles en la plataforma. Accesible solo por administradores."
+			)
 		@GetMapping("/ofertas")
 		public ResponseEntity<?> obtenerTodasOfertas() {
 
@@ -110,6 +120,12 @@ public class AdminOfertaController {
 
 
 		// Eliminar una oferta por ID
+		@Operation(
+			    summary = "Eliminar una oferta",
+			    description = "Elimina una oferta existente a partir de su ID. Solo disponible para administradores."
+			)
+			
+
 		@DeleteMapping("/ofertas/{id}")
 		public ResponseEntity<?> eliminarOferta(@PathVariable int id) {
 
@@ -131,6 +147,9 @@ public class AdminOfertaController {
 
 
 		// Cambiar el estado de una oferta (ACTIVA, CERRADA, PENDIENTE)
+		@Operation(
+			    summary = "Cambiar estado de una oferta",
+			    description = "Actualiza el estado de una oferta a ACTIVA, CERRADA o PENDIENTE según el valor proporcionado.")
 		@PutMapping("/ofertas/{id}/estado")
 		public ResponseEntity<?> cambiarEstadoOferta(@PathVariable int id, @RequestParam String estado) {
 
@@ -158,6 +177,10 @@ public class AdminOfertaController {
 
 
 		// Modificar el sector de una oferta
+		@Operation(
+			    summary = "Cambiar sector de una oferta",
+			    description = "Permite modificar el sector de una oferta a partir del nombre del nuevo sector."
+			)
 		@PutMapping("/ofertas/{id}/sector")
 		public ResponseEntity<?> cambiarSectorOferta(@PathVariable int id, @RequestParam String nombreSector) {
 

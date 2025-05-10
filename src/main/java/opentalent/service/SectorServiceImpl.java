@@ -64,9 +64,28 @@ public class SectorServiceImpl implements SectorService {
 	}
 
 	@Override
-	public Sector findByName(String nombre) {
-		
-		return sectorRepository.findByName(nombre);
+	public Sector buscarPorNombre(String nombre) {
+	    // 💬 Log inicial
+	    System.out.println("🔍 Buscando sector con nombre original: [" + nombre + "]");
+
+	    // 💡 Limpiar espacios en blanco por seguridad adicional
+	    String nombreLimpio = nombre != null ? nombre.trim() : "";
+
+	    System.out.println("🔍 Nombre limpio para búsqueda: [" + nombreLimpio + "]");
+
+	    Sector resultado = sectorRepository.buscarPorNombreFlexible(nombreLimpio).orElse(null);
+
+	    // 💬 Log de resultado
+	    if (resultado != null) {
+	        System.out.println("✅ Sector encontrado: " + resultado.getNombre());
+	    } else {
+	        System.out.println("❌ Sector NO encontrado");
+	    }
+
+	    return resultado;
 	}
+
+
+
 
 }

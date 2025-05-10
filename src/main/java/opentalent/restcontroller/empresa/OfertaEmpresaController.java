@@ -117,10 +117,10 @@ public class OfertaEmpresaController {
 
 	    Empresa empresa = usuario.getEmpresa();
 
-	    // Obtener sector por ID (validar que exista)
-	    Sector sector = sectorService.findByName(dto.getNombreSector());
+	 // Obtener sector por ID (validar que exista)
+	    Sector sector = sectorService.buscarPorNombre(dto.getNombreSector());
 	    if (sector == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje","Sector no encontrado."));
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado.");
 	    }
 
 	    // Crear la nueva oferta
@@ -176,10 +176,10 @@ public class OfertaEmpresaController {
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("mensaje","No tienes permiso para editar esta oferta"));
 	    }
 
-	    // 5. Obtener sector
-	    Sector sector = sectorService.findByName(dto.getNombreSector());
+	 // 5. Obtener sector
+	    Sector sector = sectorService.buscarPorNombre(dto.getNombreSector());
 	    if (sector == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje","Sector no encontrado"));
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sector no encontrado");
 	    }
 
 	    oferta.setTitulo(dto.getTitulo());

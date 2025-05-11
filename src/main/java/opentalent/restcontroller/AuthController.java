@@ -108,22 +108,28 @@ public class AuthController {
     
     @PostMapping("/signup")
     @Operation(summary = "Registro de nuevo usuario", description = "Permite a un nuevo usuario registrarse en la plataforma como USUARIO")
-    public ResponseEntity<?> registro(@RequestBody RegistroDto dto){
-    	 // 1. Verificar si ya existe username
-    	Usuario comprobarUsuario = usuarioService.buscarPorUsernameEntidad(dto.getUsername()); 
-        if(comprobarUsuario != null) {
-        	return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","Usuario ya registrado"));
+    public ResponseEntity<?> registro(@RequestBody RegistroDto dto) {
+        // 1. Verificar si ya existe el username
+        if (usuarioService.buscarPorUsernameEntidad(dto.getUsername()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("mensaje", "El nombre de usuario ya está en uso."));
         }
-        
-        // 2.Montamos la dirreccion 
-        Direccion direccion = modelMapper.map(dto,Direccion.class); 
-        direccion = direccionService.insertUno(direccion); 
-        
-        // 3. Añadimos el rol usuario
+
+        // 2. Verificar si ya existe el email
+        if (usuarioService.findByEmail(dto.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("mensaje", "El correo electrónico ya está registrado."));
+        }
+
+        // 3. Crear dirección
+        Direccion direccion = modelMapper.map(dto, Direccion.class);
+        direccion = direccionService.insertUno(direccion);
+
+        // 4. Rol usuario
         Rol rolUsuario = new Rol();
-        rolUsuario.setIdRol(2); // si 2 = USUARIO
-        
-        // 4. Crear usuario completo
+        rolUsuario.setIdRol(2); // Rol USUARIO
+
+        // 5. Crear y guardar usuario
         Usuario nuevoUsuario = Usuario.builder()
             .nombre(dto.getNombre())
             .apellidos(dto.getApellidos())
@@ -134,8 +140,7 @@ public class AuthController {
             .fotoPerfil(dto.getFotoPerfil())
             .telefono(dto.getTelefono())
             .username(dto.getUsername())
-          //.password(passwordEncoder.encode(dto.getPassword()))
-            .password("{noop}" + dto.getPassword()) //ENCRIPTAR CONTRASEÑA
+            .password("{noop}" + dto.getPassword())
             .fechaAlta(LocalDate.now())
             .fechaNacimiento(dto.getFechaNacimiento())
             .activo(true)
@@ -143,13 +148,13 @@ public class AuthController {
             .empresa(null)
             .rol(rolUsuario)
             .build();
-        
-        Usuario guardado = usuarioService.insertUno(nuevoUsuario); 
-        UsuarioDto dtoRespuesta = modelMapper.map(guardado, UsuarioDto.class); 
-        
+
+        Usuario guardado = usuarioService.insertUno(nuevoUsuario);
+        UsuarioDto dtoRespuesta = modelMapper.map(guardado, UsuarioDto.class);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoRespuesta);
-        
     }
+
     @Operation(
     	    summary = "Registro de usuario con empresa",
     	    description = "Permite registrar un nuevo usuario y asociarlo a una empresa existente en el sistema mediante su CIF. Verifica que el email no esté duplicado y que la empresa no esté ya asignada."
@@ -165,6 +170,13 @@ public class AuthController {
         if (existente != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","El usuario ya existe"));
         }
+        
+        //  Verificar si ya existe el email
+        if (usuarioService.findByEmail(dto.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("mensaje", "El correo electrónico ya está registrado."));
+        }
+
 
         // 2. Buscar la empresa por CIF
         Empresa empresa = empresaService.buscarUno(dto.getCif());
@@ -199,7 +211,7 @@ public class AuthController {
         // 6. Crear usuario empresa
         Usuario nuevoUsuario = Usuario.builder()
                 .nombre(dto.getNombre())
-                .apellidos(dto.getApellido())
+                .apellidos(dto.getApellidos())
                 .email(dto.getEmail())
                 .username(dto.getUsername())
                 //.password(passwordEncoder.encode(dto.getPassword()))

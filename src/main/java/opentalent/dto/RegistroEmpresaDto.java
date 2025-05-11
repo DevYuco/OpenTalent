@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class RegistroEmpresaDto {
     // Datos personales del responsable
     private String nombre;
-    private String apellido;
+    private String apellidos;
     private String email;
     private String password;
     private LocalDate fechaNacimiento;

@@ -5,6 +5,6 @@ import opentalent.repository.IGenericoCRUD;
 
 public interface SectorService extends IGenericoCRUD<Sector, Integer>{
 	Sector findByName(String nombre);
-
+	
 
 }

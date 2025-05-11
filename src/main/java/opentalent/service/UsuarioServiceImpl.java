@@ -102,6 +102,12 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return usuarioRepository.findByUsername(username);
 	}
 
+	@Override
+	public Usuario findByEmail(String email) {
+		
+		return usuarioRepository.findByEmail(email);
+	}
+
 	
 
 }

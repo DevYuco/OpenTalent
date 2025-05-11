@@ -80,7 +80,7 @@ public class EmpresaController {
 
 	    // 5. Actualizar usuario responsable
 	    usuario.setNombre(dto.getNombre());
-	    usuario.setApellidos(dto.getApellido());
+	    usuario.setApellidos(dto.getApellidos());
 	    usuario.setFechaNacimiento(dto.getFechaNacimiento());
 	    usuario.setTelefono(dto.getTelefono());
 	    usuario.setEmail(dto.getEmail());

@@ -166,7 +166,7 @@ public class AuthController {
     public ResponseEntity<?> registrarEmpresa(@RequestBody RegistroEmpresaDto dto) {
 
         // 1. Comprobar si el usuario ya existe
-        Usuario existente = usuarioService.buscarPorUsernameEntidad(dto.getEmail());
+        Usuario existente = usuarioService.buscarPorUsernameEntidad(dto.getUsername());
         if (existente != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje","El usuario ya existe"));
         }

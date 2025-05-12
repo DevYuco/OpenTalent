@@ -199,5 +199,4 @@ public class UsuarioOfertaServiceImpl implements UsuarioOfertaService {
 		
 		return usuarioOfertaRepository.rechazarSolicitud(idOferta, idUsuario);
 	}
-
 }

@@ -2,6 +2,7 @@ package opentalent.restcontroller.empresa;
 
 import java.util.Map;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import opentalent.dto.RegistroEmpresaDto;
 import opentalent.dto.UsuarioDto;
 import opentalent.entidades.Direccion;
-import opentalent.entidades.Empresa;
 import opentalent.entidades.Usuario;
 import opentalent.service.DireccionService;
-import opentalent.service.EmpresaService;
 import opentalent.service.SectorService;
 import opentalent.service.UsuarioService;
 
@@ -36,13 +35,13 @@ public class EmpresaController {
 	private UsuarioService usuarioService;
 
 	@Autowired
-	private EmpresaService empresaService;
-
-	@Autowired
 	private DireccionService direccionService;
 	
 	@Autowired
 	private SectorService sectorService;
+	
+	@Autowired
+	private ModelMapper modelMapper; 
 	
 	@Operation(
 		    summary = "Editar datos de empresa",
@@ -53,43 +52,49 @@ public class EmpresaController {
 	@ApiResponse(responseCode = "500", description = "Error interno al procesar la solicitud")
 	@PutMapping("/")
 	public ResponseEntity<?> editarEmpresa(@RequestBody RegistroEmpresaDto dto) {
+	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	    Usuario usuarioActual = usuarioService.buscarPorUsernameEntidad(username);
 
-	    // 1. Obtener username desde el token (usuario autenticado)
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-	    // 2. Buscar al usuario
-	    Usuario usuario = usuarioService.buscarPorUsernameEntidad(username);
-	    if (usuario == null || usuario.getEmpresa() == null) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje","Usuario o empresa no encontrada."));
+	    if (usuarioActual == null || usuarioActual.getEmpresa() == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje", "Usuario o empresa no encontrada."));
 	    }
 
-	    Empresa empresa = usuario.getEmpresa();
+	    // Comprobación de duplicado de email
+	    Usuario otro = usuarioService.findByEmail(dto.getEmail());
+	    if (otro != null && !otro.getEmail().equals(usuarioActual.getEmail())) {
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("mensaje", "El correo electrónico ya está en uso por otro usuario"));
+	    }
 
-	    // 3. Actualizar dirección
-	    Direccion direccion = usuario.getDireccion();
+	    // Actualizar datos personales del responsable
+	    usuarioActual.setNombre(dto.getNombre());
+	    usuarioActual.setApellidos(dto.getApellidos());
+	    usuarioActual.setFechaNacimiento(dto.getFechaNacimiento());
+	    usuarioActual.setTelefono(dto.getTelefono());
+	    usuarioActual.setEmail(dto.getEmail());
+	    usuarioActual.setUsername(dto.getUsername());
+	    usuarioActual.setFotoPerfil(dto.getFotoPerfil());
+	    
+	    
+        // Actualizar dirección
+	    Direccion direccion = usuarioActual.getDireccion();
 	    direccion.setCalle(dto.getCalle());
 	    direccion.setPais(dto.getPais());
 	    direccion.setCodigoPostal(dto.getCodigoPostal());
 	    direccion.setProvincia(dto.getProvincia());
 	    direccion.setPoblacion(dto.getPoblacion());
 	    direccionService.modificarUno(direccion);
+	    
+	    
+	    // Si se envía nueva contraseña
+	    if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+	        usuarioActual.setPassword("{noop}" + dto.getPassword());
+	    }
 
-	    // 4. Actualizar empresa
-	    empresa.setEmail(dto.getEmail());
-	    empresaService.modificarUno(empresa);
 
-	    // 5. Actualizar usuario responsable
-	    usuario.setNombre(dto.getNombre());
-	    usuario.setApellidos(dto.getApellidos());
-	    usuario.setFechaNacimiento(dto.getFechaNacimiento());
-	    usuario.setTelefono(dto.getTelefono());
-	    usuario.setEmail(dto.getEmail());
-	    usuario.setUsername(dto.getUsername());
-	    usuario.setPassword("{noop}" + dto.getPassword()); // Puedes encriptarlo si lo deseas
-	    usuario.setFotoPerfil(dto.getFotoPerfil());
-	    usuarioService.modificarUno(usuario);
+	    Usuario actualizado = usuarioService.modificarUno(usuarioActual);
+	    UsuarioDto respuesta = modelMapper.map(actualizado, UsuarioDto.class);
 
-	    return ResponseEntity.ok(Map.of("mensaje","Empresa editada correctamente."));
+	    return ResponseEntity.ok(respuesta);
 	}
 	
 	@Operation(

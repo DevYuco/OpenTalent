@@ -131,7 +131,7 @@ CREATE TABLE Usuario_Proyecto (
 
 -- Tabla de Reseñas (Unificada para Empresas y Proyectos) 
 CREATE TABLE Resennas (
-    id_reseña INT AUTO_INCREMENT PRIMARY KEY,
+    id_resenna INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
     comentario TEXT,
     valoracion ENUM('POSITIVA', 'NEUTRAL', 'NEGATIVA') NOT NULL,

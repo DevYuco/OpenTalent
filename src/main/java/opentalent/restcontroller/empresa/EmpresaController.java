@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,6 +43,9 @@ public class EmpresaController {
 	
 	@Autowired
 	private ModelMapper modelMapper; 
+	
+	@Autowired 
+	private PasswordEncoder passwordEncoder; 
 	
 	@Operation(
 		    summary = "Editar datos de empresa",
@@ -87,7 +91,8 @@ public class EmpresaController {
 	    
 	    // Si se envía nueva contraseña
 	    if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-	        usuarioActual.setPassword("{noop}" + dto.getPassword());
+	        //usuarioActual.setPassword("{noop}" + dto.getPassword());
+            usuarioActual.setPassword(passwordEncoder.encode(dto.getPassword()));
 	    }
 
 

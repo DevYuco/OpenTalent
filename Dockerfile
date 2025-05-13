@@ -18,4 +18,4 @@ RUN mkdir -p /app/static/frontend
 EXPOSE ${SERVER_PORT:-9009}
 
 # Comando para iniciar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dfile.encoding=UTF-8", "-jar", "app.jar"]
